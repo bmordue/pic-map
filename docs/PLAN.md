@@ -29,67 +29,6 @@ The Pic-Map system consists of several key components working together to create
 4. **Link Manager**: Manages connections between pictures and map markers
 5. **Export Engine**: Converts the composition to print-ready formats
 
-### Component Diagram
-
-```graphviz
-digraph PicMapArchitecture {
-    rankdir=TB;
-    node [shape=box, style="rounded,filled", fillcolor=lightblue];
-    
-    // Input sources
-    subgraph cluster_input {
-        label="Input Sources";
-        style=filled;
-        color=lightgrey;
-        GeoData [label="Geographic Data\n(Locations, Coordinates)"];
-        ImageData [label="Image Data\n(Photos, Metadata)"];
-        Config [label="Configuration\n(Layout, Styling)"];
-    }
-    
-    // Core components
-    subgraph cluster_core {
-        label="Core Components";
-        style=filled;
-        color=lightcyan;
-        DataManager [label="Data Manager\n(TypeScript)", fillcolor=lightgreen];
-        MapEngine [label="Map Engine\n(Render Map View)", fillcolor=lightgreen];
-        BorderEngine [label="Picture Border Engine\n(Arrange Pictures)", fillcolor=lightgreen];
-        LinkManager [label="Link Manager\n(Picture-Marker Links)", fillcolor=lightgreen];
-    }
-    
-    // Rendering layer
-    subgraph cluster_render {
-        label="Rendering & Export";
-        style=filled;
-        color=lightyellow;
-        Compositor [label="Compositor\n(Combine Elements)"];
-        ExportEngine [label="Export Engine\n(SVG/EPS/PDF)"];
-    }
-    
-    // Output
-    Output [label="Print-Ready Output\n(SVG, EPS, PDF)", shape=folder, fillcolor=lightcoral];
-    
-    // Data flow
-    GeoData -> DataManager;
-    ImageData -> DataManager;
-    Config -> DataManager;
-    
-    DataManager -> MapEngine;
-    DataManager -> BorderEngine;
-    DataManager -> LinkManager;
-    
-    MapEngine -> Compositor;
-    BorderEngine -> Compositor;
-    LinkManager -> Compositor;
-    
-    Compositor -> ExportEngine;
-    ExportEngine -> Output;
-    
-    // Styling
-    edge [color=darkblue, penwidth=1.5];
-}
-```
-
 ## Implementation Phases
 
 ### Phase 1: Project Setup & Foundation
