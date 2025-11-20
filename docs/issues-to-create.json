@@ -1,0 +1,52 @@
+[
+  {
+    "title": "Phase 1: Project Setup & Foundation",
+    "body": "## Overview\nSet up the foundational infrastructure for the Pic-Map project.\n\n## Tasks\n- [x] Initialize TypeScript project structure\n- [ ] Set up build tooling (TSC, bundler)\n- [ ] Configure linting (ESLint, Prettier)\n- [ ] Set up testing framework (Jest/Vitest)\n- [ ] Create basic project documentation\n\n## Related\n- See PLAN.md Phase 1 for full details\n- Part of Milestone M1 - Foundation (Weeks 1-2)",
+    "labels": ["phase-1", "setup", "foundation"]
+  },
+  {
+    "title": "Phase 2: Data Layer",
+    "body": "## Overview\nImplement the data layer for managing geographic data and image metadata.\n\n## Tasks\n- [ ] Define TypeScript interfaces for:\n  - Geographic locations (lat/long, place names)\n  - Image metadata (file paths, captions, dimensions)\n  - Configuration schema (layout, styling options)\n- [ ] Implement data validation\n- [ ] Create data loader/parser utilities\n- [ ] Add unit tests for data layer\n\n## Related\n- See PLAN.md Phase 2 for full details\n- Part of Milestone M1 - Foundation (Weeks 1-2)",
+    "labels": ["phase-2", "data-layer"]
+  },
+  {
+    "title": "Phase 3: Map Engine",
+    "body": "## Overview\nImplement the map rendering engine for displaying geographic data.\n\n## Tasks\n- [ ] Research and select map library (Leaflet, Mapbox, or custom SVG)\n- [ ] Implement map rendering for print output\n- [ ] Add marker placement functionality\n- [ ] Support custom styling for print\n- [ ] Create map configuration options\n- [ ] Add integration tests\n\n## Related\n- See PLAN.md Phase 3 for full details\n- Part of Milestone M2 - Core Rendering (Weeks 3-5)",
+    "labels": ["phase-3", "map-engine", "core-rendering"]
+  },
+  {
+    "title": "Phase 4: Picture Border Engine",
+    "body": "## Overview\nImplement the picture border engine for arranging and rendering pictures around the map.\n\n## Tasks\n- [ ] Design picture layout algorithm\n  - Calculate border dimensions\n  - Distribute pictures evenly\n  - Handle variable picture sizes\n- [ ] Implement picture positioning\n- [ ] Add picture frame/styling options\n- [ ] Ensure print quality (DPI, resolution)\n- [ ] Add unit tests for layout algorithms\n\n## Related\n- See PLAN.md Phase 4 for full details\n- Part of Milestone M2 - Core Rendering (Weeks 3-5)",
+    "labels": ["phase-4", "picture-border", "core-rendering"]
+  },
+  {
+    "title": "Phase 5: Link Manager",
+    "body": "## Overview\nImplement the link manager for connecting pictures to map markers.\n\n## Tasks\n- [ ] Implement picture-to-marker linking logic\n- [ ] Add visual link indicators (lines, numbers, etc.)\n- [ ] Support various link styles\n- [ ] Handle edge cases (multiple pictures per location)\n- [ ] Add tests for link rendering\n\n## Related\n- See PLAN.md Phase 5 for full details\n- Part of Milestone M3 - Integration (Weeks 6-7)",
+    "labels": ["phase-5", "link-manager", "integration"]
+  },
+  {
+    "title": "Phase 6: Compositor & Rendering",
+    "body": "## Overview\nImplement the compositor to combine map and picture border elements into final output.\n\n## Tasks\n- [ ] Combine map and picture border elements\n- [ ] Implement layout engine for final composition\n- [ ] Add support for different page sizes (A4, Letter, custom)\n- [ ] Ensure proper alignment and spacing\n- [ ] Add preview functionality\n- [ ] Integration tests for full rendering\n\n## Related\n- See PLAN.md Phase 6 for full details\n- Part of Milestone M3 - Integration (Weeks 6-7)",
+    "labels": ["phase-6", "compositor", "rendering", "integration"]
+  },
+  {
+    "title": "Phase 7: Export Engine",
+    "body": "## Overview\nImplement the export engine for generating print-ready output formats.\n\n## Tasks\n- [ ] Implement SVG export\n  - Ensure all elements are vector-based\n  - Embed or reference images appropriately\n- [ ] Implement PDF export\n  - Research PDF generation library\n  - Maintain print quality\n- [ ] Implement EPS export (if needed)\n- [ ] Add export configuration options\n- [ ] Validate output quality\n\n## Related\n- See PLAN.md Phase 7 for full details\n- Part of Milestone M4 - Export (Weeks 8-9)",
+    "labels": ["phase-7", "export", "svg", "pdf"]
+  },
+  {
+    "title": "Phase 8: User Interface (Optional)",
+    "body": "## Overview\nImplement user interface options for configuration and interaction.\n\n## Tasks\n- [ ] Design configuration file format (JSON/YAML)\n- [ ] Create CLI for batch processing\n- [ ] Consider web-based editor for interactive design\n- [ ] Add preview functionality\n- [ ] Documentation for UI usage\n\n## Related\n- See PLAN.md Phase 8 for full details\n- Part of Milestone M5 - Polish (Weeks 10-12)",
+    "labels": ["phase-8", "ui", "cli", "optional"]
+  },
+  {
+    "title": "Phase 9: Documentation & Examples",
+    "body": "## Overview\nCreate comprehensive documentation and examples for the project.\n\n## Tasks\n- [ ] Write comprehensive README\n- [ ] Create API documentation\n- [ ] Provide usage examples\n- [ ] Include sample datasets\n- [ ] Tutorial/getting started guide\n\n## Related\n- See PLAN.md Phase 9 for full details\n- Part of Milestone M5 - Polish (Weeks 10-12)",
+    "labels": ["phase-9", "documentation", "examples"]
+  },
+  {
+    "title": "Phase 10: Testing & Refinement",
+    "body": "## Overview\nPerform comprehensive testing and refinement of the entire system.\n\n## Tasks\n- [ ] End-to-end testing with real data\n- [ ] Performance optimization\n- [ ] Print output validation\n- [ ] Cross-platform testing\n- [ ] Bug fixes and refinements\n\n## Related\n- See PLAN.md Phase 10 for full details\n- Part of Milestone M5 - Polish (Weeks 10-12)",
+    "labels": ["phase-10", "testing", "refinement", "quality-assurance"]
+  }
+]
