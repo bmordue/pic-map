@@ -1,0 +1,10 @@
+/**
+ * Pic-Map - Create maps with picture borders
+ * Main entry point
+ */
+
+export const version = '1.0.0';
+
+export function greet(name: string): string {
+  return `Hello, ${name}! Welcome to Pic-Map.`;
+}
