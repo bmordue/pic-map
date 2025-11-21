@@ -1,0 +1,104 @@
+{
+  "title": "London Tourism Map",
+  "description": "A map of London showing major tourist attractions with photos",
+  "layout": {
+    "pageSize": "A4",
+    "orientation": "landscape",
+    "borderWidth": 60,
+    "pictureSpacing": 10,
+    "margin": {
+      "top": 20,
+      "right": 20,
+      "bottom": 20,
+      "left": 20
+    }
+  },
+  "map": {
+    "provider": "openstreetmap",
+    "zoom": 12,
+    "center": {
+      "latitude": 51.5074,
+      "longitude": -0.1278,
+      "name": "London",
+      "description": "Capital of the United Kingdom"
+    },
+    "showScale": true,
+    "showAttribution": true
+  },
+  "pictureBorder": {
+    "backgroundColor": "#ffffff",
+    "borderColor": "#333333",
+    "borderThickness": 2,
+    "cornerRadius": 5
+  },
+  "linkStyle": {
+    "type": "both",
+    "lineColor": "#0066cc",
+    "lineWidth": 2,
+    "lineStyle": "solid",
+    "labelStyle": {
+      "fontFamily": "Arial",
+      "fontSize": 14,
+      "color": "#000000"
+    }
+  },
+  "images": [
+    {
+      "filePath": "/images/big-ben.jpg",
+      "caption": "Big Ben and Houses of Parliament",
+      "altText": "The iconic clock tower of Westminster",
+      "credit": "Photo by John Smith",
+      "dimensions": {
+        "width": 1920,
+        "height": 1280
+      }
+    },
+    {
+      "filePath": "/images/tower-bridge.jpg",
+      "caption": "Tower Bridge",
+      "altText": "The famous bridge over the River Thames",
+      "dimensions": {
+        "width": 1920,
+        "height": 1280
+      }
+    },
+    {
+      "filePath": "/images/london-eye.jpg",
+      "caption": "The London Eye",
+      "altText": "Giant observation wheel on the South Bank",
+      "dimensions": {
+        "width": 1920,
+        "height": 1280
+      }
+    }
+  ],
+  "links": [
+    {
+      "imageId": "0",
+      "location": {
+        "latitude": 51.5007,
+        "longitude": -0.1246,
+        "name": "Big Ben"
+      },
+      "label": "A"
+    },
+    {
+      "imageId": "1",
+      "location": {
+        "latitude": 51.5055,
+        "longitude": -0.0754,
+        "name": "Tower Bridge"
+      },
+      "label": "B"
+    },
+    {
+      "imageId": "2",
+      "location": {
+        "latitude": 51.5033,
+        "longitude": -0.1195,
+        "name": "London Eye"
+      },
+      "label": "C"
+    }
+  ]
+}
