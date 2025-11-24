@@ -70,7 +70,7 @@ describe('parseConfigFromJSON', () => {
 });
 
 describe('loadConfigFromFile', () => {
-  const testDir = '/tmp/pic-map-test';
+  const testDir = join(tmpdir(), 'pic-map-test');
   const testFile = join(testDir, 'test-config.json');
 
   beforeEach(async () => {
