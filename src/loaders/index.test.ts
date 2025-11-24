@@ -201,12 +201,12 @@ describe('normalizeConfig', () => {
     const configWithPartialBorder: PicMapConfig = {
       ...minimalConfig,
       pictureBorder: {
-        backgroundColor: '#red',
+        backgroundColor: '#ff0000',
       },
     };
 
     const normalized = normalizeConfig(configWithPartialBorder);
-    expect(normalized.pictureBorder?.backgroundColor).toBe('#red');
+    expect(normalized.pictureBorder?.backgroundColor).toBe('#ff0000');
     expect(normalized.pictureBorder?.borderColor).toBe('#000000');
     expect(normalized.pictureBorder?.borderThickness).toBe(1);
     expect(normalized.pictureBorder?.cornerRadius).toBe(0);
