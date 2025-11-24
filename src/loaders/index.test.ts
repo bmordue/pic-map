@@ -44,16 +44,12 @@ describe('parseConfigFromJSON', () => {
   });
 
   it('should throw ConfigLoadError for invalid JSON', () => {
-    expect(() => parseConfigFromJSON('not valid json{')).toThrow(
-      ConfigLoadError,
-    );
+    expect(() => parseConfigFromJSON('not valid json{')).toThrow(ConfigLoadError);
   });
 
   it('should throw ConfigValidationError for invalid config', () => {
     const invalidConfig = JSON.stringify({ title: '' });
-    expect(() => parseConfigFromJSON(invalidConfig)).toThrow(
-      ConfigValidationError,
-    );
+    expect(() => parseConfigFromJSON(invalidConfig)).toThrow(ConfigValidationError);
   });
 
   it('should include validation errors in exception', () => {
@@ -114,25 +110,19 @@ describe('loadConfigFromFile', () => {
   });
 
   it('should throw ConfigLoadError for non-existent file', async () => {
-    await expect(
-      loadConfigFromFile('/non/existent/file.json'),
-    ).rejects.toThrow(ConfigLoadError);
+    await expect(loadConfigFromFile('/non/existent/file.json')).rejects.toThrow(ConfigLoadError);
   });
 
   it('should throw ConfigValidationError for invalid config file', async () => {
     await writeFile(testFile, JSON.stringify({ title: '' }));
 
-    await expect(loadConfigFromFile(testFile)).rejects.toThrow(
-      ConfigValidationError,
-    );
+    await expect(loadConfigFromFile(testFile)).rejects.toThrow(ConfigValidationError);
   });
 
   it('should throw ConfigLoadError for malformed JSON file', async () => {
     await writeFile(testFile, 'not valid json{');
 
-    await expect(loadConfigFromFile(testFile)).rejects.toThrow(
-      ConfigLoadError,
-    );
+    await expect(loadConfigFromFile(testFile)).rejects.toThrow(ConfigLoadError);
   });
 });
 

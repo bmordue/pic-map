@@ -2,11 +2,7 @@
  * Example script demonstrating how to load and validate a PicMap configuration
  */
 
-import {
-  loadConfigFromFile,
-  normalizeConfig,
-  validateConfigReferences,
-} from '../loaders';
+import { loadConfigFromFile, normalizeConfig, validateConfigReferences } from '../loaders';
 import { validatePicMapConfig } from '../validators';
 
 async function main() {
@@ -49,9 +45,7 @@ async function main() {
     // Normalize the configuration with defaults
     const normalized = normalizeConfig(config);
     console.log('\n✓ Configuration normalized with defaults');
-    console.log(
-      `  Picture border color: ${normalized.pictureBorder?.borderColor}`,
-    );
+    console.log(`  Picture border color: ${normalized.pictureBorder?.borderColor}`);
     console.log(`  Link style type: ${normalized.linkStyle?.type}`);
     console.log(`  Show map scale: ${normalized.map.showScale}`);
 

@@ -12,7 +12,7 @@ import { validatePicMapConfig } from '../validators';
 export class ConfigLoadError extends Error {
   constructor(
     message: string,
-    public readonly cause?: Error,
+    public readonly cause?: Error
   ) {
     super(message);
     this.name = 'ConfigLoadError';
@@ -25,7 +25,7 @@ export class ConfigLoadError extends Error {
 export class ConfigValidationError extends Error {
   constructor(
     message: string,
-    public readonly validationErrors: string[],
+    public readonly validationErrors: string[]
   ) {
     super(message);
     this.name = 'ConfigValidationError';
@@ -44,19 +44,13 @@ export function parseConfigFromJSON(jsonString: string): PicMapConfig {
   try {
     parsed = JSON.parse(jsonString);
   } catch (error) {
-    throw new ConfigLoadError(
-      'Failed to parse JSON',
-      error instanceof Error ? error : undefined,
-    );
+    throw new ConfigLoadError('Failed to parse JSON', error instanceof Error ? error : undefined);
   }
 
   const validationResult = validatePicMapConfig(parsed);
 
   if (!validationResult.valid) {
-    throw new ConfigValidationError(
-      'Configuration validation failed',
-      validationResult.errors,
-    );
+    throw new ConfigValidationError('Configuration validation failed', validationResult.errors);
   }
 
   return parsed as PicMapConfig;
@@ -69,9 +63,7 @@ export function parseConfigFromJSON(jsonString: string): PicMapConfig {
  * @throws ConfigLoadError if file cannot be read
  * @throws ConfigValidationError if validation fails
  */
-export async function loadConfigFromFile(
-  filePath: string,
-): Promise<PicMapConfig> {
+export async function loadConfigFromFile(filePath: string): Promise<PicMapConfig> {
   let content: string;
 
   try {
@@ -79,7 +71,7 @@ export async function loadConfigFromFile(
   } catch (error) {
     throw new ConfigLoadError(
       `Failed to read config file: ${filePath}`,
-      error instanceof Error ? error : undefined,
+      error instanceof Error ? error : undefined
     );
   }
 
@@ -153,9 +145,7 @@ export function validateImageReferences(config: PicMapConfig): string[] {
   // Check each link references a valid image
   config.links.forEach((link, linkIdx) => {
     if (!imageIds.has(link.imageId)) {
-      errors.push(
-        `Link ${linkIdx} references non-existent image ID: ${link.imageId}`,
-      );
+      errors.push(`Link ${linkIdx} references non-existent image ID: ${link.imageId}`);
     }
   });
 

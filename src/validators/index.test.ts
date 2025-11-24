@@ -11,13 +11,7 @@ import {
   isImageMetadata,
   isPicMapConfig,
 } from './index';
-import type {
-  GeoLocation,
-  ImageMetadata,
-  LayoutOptions,
-  MapStyle,
-  PicMapConfig,
-} from '../types';
+import type { GeoLocation, ImageMetadata, LayoutOptions, MapStyle, PicMapConfig } from '../types';
 
 describe('validateGeoLocation', () => {
   it('should validate a valid location', () => {
@@ -168,9 +162,7 @@ describe('validateLayoutOptions', () => {
     };
     const result = validateLayoutOptions(layout);
     expect(result.valid).toBe(false);
-    expect(
-      result.errors.some((e) => e.includes('customDimensions')),
-    ).toBe(true);
+    expect(result.errors.some((e) => e.includes('customDimensions'))).toBe(true);
   });
 
   it('should accept custom pageSize with valid dimensions', () => {
@@ -341,10 +333,7 @@ describe('validatePicMapConfig', () => {
       zoom: 10,
       center: { latitude: 51.5074, longitude: -0.1278 },
     },
-    images: [
-      { filePath: '/path/to/image1.jpg' },
-      { filePath: '/path/to/image2.jpg' },
-    ],
+    images: [{ filePath: '/path/to/image1.jpg' }, { filePath: '/path/to/image2.jpg' }],
     links: [
       {
         imageId: '0',

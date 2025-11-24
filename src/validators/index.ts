@@ -57,9 +57,7 @@ export function validateGeoLocation(location: unknown): ValidationResult {
 /**
  * Validates image dimensions
  */
-export function validateImageDimensions(
-  dimensions: unknown,
-): ValidationResult {
+export function validateImageDimensions(dimensions: unknown): ValidationResult {
   const errors: string[] = [];
 
   if (typeof dimensions !== 'object' || dimensions === null) {
@@ -148,9 +146,7 @@ export function validateLayoutOptions(layout: unknown): ValidationResult {
   if (typeof opts.pageSize !== 'string') {
     errors.push('pageSize must be a string');
   } else if (!validPageSizes.includes(opts.pageSize)) {
-    errors.push(
-      `pageSize must be one of: ${validPageSizes.join(', ')}`,
-    );
+    errors.push(`pageSize must be one of: ${validPageSizes.join(', ')}`);
   }
 
   // If custom, check customDimensions
@@ -173,9 +169,7 @@ export function validateLayoutOptions(layout: unknown): ValidationResult {
   if (typeof opts.orientation !== 'string') {
     errors.push('orientation must be a string');
   } else if (!validOrientations.includes(opts.orientation)) {
-    errors.push(
-      `orientation must be one of: ${validOrientations.join(', ')}`,
-    );
+    errors.push(`orientation must be one of: ${validOrientations.join(', ')}`);
   }
 
   // Validate numeric fields
@@ -245,24 +239,16 @@ export function validateMapStyle(mapStyle: unknown): ValidationResult {
   } else {
     const centerResult = validateGeoLocation(style.center);
     if (!centerResult.valid) {
-      errors.push(
-        ...centerResult.errors.map((e) => `center.${e}`),
-      );
+      errors.push(...centerResult.errors.map((e) => `center.${e}`));
     }
   }
 
   // Optional boolean fields
-  if (
-    style.showScale !== undefined &&
-    typeof style.showScale !== 'boolean'
-  ) {
+  if (style.showScale !== undefined && typeof style.showScale !== 'boolean') {
     errors.push('showScale must be a boolean');
   }
 
-  if (
-    style.showAttribution !== undefined &&
-    typeof style.showAttribution !== 'boolean'
-  ) {
+  if (style.showAttribution !== undefined && typeof style.showAttribution !== 'boolean') {
     errors.push('showAttribution must be a boolean');
   }
 
@@ -363,9 +349,7 @@ export function validatePicMapConfig(config: unknown): ValidationResult {
     cfg.images.forEach((img, idx) => {
       const imgResult = validateImageMetadata(img);
       if (!imgResult.valid) {
-        errors.push(
-          ...imgResult.errors.map((e) => `images[${idx}].${e}`),
-        );
+        errors.push(...imgResult.errors.map((e) => `images[${idx}].${e}`));
       }
     });
   }
@@ -377,9 +361,7 @@ export function validatePicMapConfig(config: unknown): ValidationResult {
     cfg.links.forEach((link, idx) => {
       const linkResult = validateImageLocationLink(link);
       if (!linkResult.valid) {
-        errors.push(
-          ...linkResult.errors.map((e) => `links[${idx}].${e}`),
-        );
+        errors.push(...linkResult.errors.map((e) => `links[${idx}].${e}`));
       }
     });
   }
