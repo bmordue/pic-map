@@ -68,6 +68,47 @@ npm run format:check
 npm run typecheck
 ```
 
+### Quick Start Example
+
+```bash
+# Build the project
+npm run build
+
+# Generate a map from the sample configuration
+node dist/examples/render-map.js
+
+# View the generated SVG
+# The map will be saved as map-output.svg in the project root
+```
+
+You can also use the Map Engine programmatically:
+
+```typescript
+import { MapEngine } from 'picmap';
+
+const engine = new MapEngine();
+
+const result = engine.renderMap({
+  style: {
+    provider: 'openstreetmap',
+    zoom: 12,
+    center: { latitude: 51.5074, longitude: -0.1278 },
+    showScale: true,
+    showAttribution: true,
+  },
+  width: 800,
+  height: 600,
+  markers: [
+    {
+      location: { latitude: 51.5074, longitude: -0.1278 },
+      label: 'A',
+    },
+  ],
+});
+
+console.log(result.svg); // SVG output
+```
+
 ## Project Structure
 
 ```
@@ -86,13 +127,33 @@ pic-map/
 
 This project is in active development. See [PLAN.md](docs/PLAN.md) for the full development roadmap.
 
-### Current Phase: Foundation (Phase 1)
+### Completed Phases
 
+**Phase 1: Foundation** ✅
 - [x] Initialize TypeScript project structure
 - [x] Set up build tooling (TSC)
 - [x] Configure linting (ESLint, Prettier)
 - [x] Set up testing framework (Vitest)
 - [x] Create basic project documentation
+
+**Phase 2: Data Layer** ✅
+- [x] Define TypeScript interfaces for locations, images, and configuration
+- [x] Implement data validation
+- [x] Create data loader/parser utilities
+- [x] Add unit tests for data layer
+
+**Phase 3: Map Engine** ✅
+- [x] Custom SVG-based map rendering for print output
+- [x] Web Mercator projection coordinate conversion
+- [x] Marker placement with multiple shapes (pin, circle, square)
+- [x] Custom styling support (colors, sizes)
+- [x] Auto-zoom and auto-center utilities
+- [x] Scale bar and attribution rendering
+- [x] Comprehensive test coverage (114 tests)
+
+### Current Phase: Picture Border Engine (Phase 4)
+
+See [Map Engine Documentation](src/map-engine/README.md) for detailed usage examples.
 
 ## Contributing
 
