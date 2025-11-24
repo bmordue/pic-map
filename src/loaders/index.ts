@@ -92,26 +92,40 @@ export async function loadConfigFromFile(
  * @returns Normalized configuration with defaults applied
  */
 export function normalizeConfig(config: PicMapConfig): PicMapConfig {
+  // Merge default labelStyle with user-provided labelStyle
+  const defaultLabelStyle = {
+    fontFamily: 'Arial',
+    fontSize: 12,
+    color: '#000000',
+  };
+
+  const normalizedLabelStyle = {
+    ...defaultLabelStyle,
+    ...config.linkStyle?.labelStyle,
+  };
+
+  // Destructure linkStyle to separate labelStyle from other properties
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { labelStyle: _, ...restLinkStyle } = config.linkStyle ?? {};
+
   return {
     ...config,
     // Apply default picture border style if not provided
-    pictureBorder: config.pictureBorder ?? {
+    pictureBorder: {
       backgroundColor: '#ffffff',
       borderColor: '#000000',
       borderThickness: 1,
       cornerRadius: 0,
+      ...config.pictureBorder,
     },
     // Apply default link style if not provided
-    linkStyle: config.linkStyle ?? {
+    linkStyle: {
       type: 'label',
       lineColor: '#000000',
       lineWidth: 1,
       lineStyle: 'solid',
-      labelStyle: {
-        fontFamily: 'Arial',
-        fontSize: 12,
-        color: '#000000',
-      },
+      labelStyle: normalizedLabelStyle,
+      ...restLinkStyle,
     },
     // Apply default map options if not provided
     map: {

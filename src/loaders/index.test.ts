@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { writeFile, mkdir, rm } from 'fs/promises';
+import { tmpdir } from 'os';
 import { join } from 'path';
 import {
   parseConfigFromJSON,
@@ -194,6 +195,57 @@ describe('normalizeConfig', () => {
     const normalized = normalizeConfig(configWithCustoms);
     expect(normalized.pictureBorder?.backgroundColor).toBe('#ff0000');
     expect(normalized.linkStyle?.type).toBe('line');
+  });
+
+  it('should merge partial pictureBorder with defaults', () => {
+    const configWithPartialBorder: PicMapConfig = {
+      ...minimalConfig,
+      pictureBorder: {
+        backgroundColor: '#red',
+      },
+    };
+
+    const normalized = normalizeConfig(configWithPartialBorder);
+    expect(normalized.pictureBorder?.backgroundColor).toBe('#red');
+    expect(normalized.pictureBorder?.borderColor).toBe('#000000');
+    expect(normalized.pictureBorder?.borderThickness).toBe(1);
+    expect(normalized.pictureBorder?.cornerRadius).toBe(0);
+  });
+
+  it('should merge partial linkStyle with defaults', () => {
+    const configWithPartialLink: PicMapConfig = {
+      ...minimalConfig,
+      linkStyle: {
+        type: 'line',
+      },
+    };
+
+    const normalized = normalizeConfig(configWithPartialLink);
+    expect(normalized.linkStyle?.type).toBe('line');
+    expect(normalized.linkStyle?.lineColor).toBe('#000000');
+    expect(normalized.linkStyle?.lineWidth).toBe(1);
+    expect(normalized.linkStyle?.lineStyle).toBe('solid');
+    expect(normalized.linkStyle?.labelStyle?.fontFamily).toBe('Arial');
+    expect(normalized.linkStyle?.labelStyle?.fontSize).toBe(12);
+    expect(normalized.linkStyle?.labelStyle?.color).toBe('#000000');
+  });
+
+  it('should merge partial labelStyle with defaults', () => {
+    const configWithPartialLabelStyle: PicMapConfig = {
+      ...minimalConfig,
+      linkStyle: {
+        type: 'both',
+        labelStyle: {
+          fontSize: 16,
+        },
+      },
+    };
+
+    const normalized = normalizeConfig(configWithPartialLabelStyle);
+    expect(normalized.linkStyle?.type).toBe('both');
+    expect(normalized.linkStyle?.labelStyle?.fontFamily).toBe('Arial');
+    expect(normalized.linkStyle?.labelStyle?.fontSize).toBe(16);
+    expect(normalized.linkStyle?.labelStyle?.color).toBe('#000000');
   });
 
   it('should preserve explicit map option values', () => {
