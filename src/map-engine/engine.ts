@@ -22,6 +22,13 @@ export interface MapRenderConfig {
 }
 
 /**
+ * Constants for rendering
+ */
+const TILE_SIZE = 256; // Standard tile size for grid
+const PIN_SHAPE_RATIO = 1 / 3; // Width ratio for pin base
+const PIN_HEIGHT_RATIO = 1.2; // Height ratio for pin top curve
+
+/**
  * Map rendering engine
  */
 export class MapEngine {
@@ -88,17 +95,16 @@ export class MapEngine {
    * Adds decorative grid lines to simulate map tiles
    */
   private addGridLines(svgParts: string[], width: number, height: number): void {
-    const gridSize = 256; // Standard tile size
     
     svgParts.push('<g id="grid" opacity="0.3">');
     
     // Vertical lines
-    for (let x = 0; x <= width; x += gridSize) {
+    for (let x = 0; x <= width; x += TILE_SIZE) {
       svgParts.push(`<line x1="${x}" y1="0" x2="${x}" y2="${height}" stroke="#999999" stroke-width="0.5"/>`);
     }
     
     // Horizontal lines
-    for (let y = 0; y <= height; y += gridSize) {
+    for (let y = 0; y <= height; y += TILE_SIZE) {
       svgParts.push(`<line x1="0" y1="${y}" x2="${width}" y2="${y}" stroke="#999999" stroke-width="0.5"/>`);
     }
     
@@ -135,7 +141,7 @@ export class MapEngine {
       case 'pin':
       default:
         // Draw a pin shape (teardrop)
-        parts.push(`<path d="M 0,0 L -${size / 3},-${size} Q 0,-${size * 1.2} ${size / 3},-${size} Z" fill="${color}" stroke="white" stroke-width="2"/>`);
+        parts.push(`<path d="M 0,0 L -${size * PIN_SHAPE_RATIO},-${size} Q 0,-${size * PIN_HEIGHT_RATIO} ${size * PIN_SHAPE_RATIO},-${size} Z" fill="${color}" stroke="white" stroke-width="2"/>`);
         break;
     }
     
