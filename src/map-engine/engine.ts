@@ -40,7 +40,7 @@ function isValidRgbColor(color: string): boolean {
   const match = color.match(/^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/);
   if (!match) return false;
   const [, r, g, b] = match;
-  return parseInt(r) <= 255 && parseInt(g) <= 255 && parseInt(b) <= 255;
+  return parseInt(r, 10) <= 255 && parseInt(g, 10) <= 255 && parseInt(b, 10) <= 255;
 }
 
 /**
