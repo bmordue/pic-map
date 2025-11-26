@@ -54,6 +54,19 @@ describe('MapEngine', () => {
       expect(result.svg).toContain('#abcdef');
     });
     
+    it('should use default background color for invalid color value', () => {
+      const engine = new MapEngine();
+      const result = engine.renderMap({
+        style: defaultMapStyle,
+        width: 800,
+        height: 600,
+        backgroundColor: 'invalid<script>alert(1)</script>',
+      });
+      
+      expect(result.svg).toContain('#f0f0f0');
+      expect(result.svg).not.toContain('<script>');
+    });
+    
     it('should include scale when showScale is true', () => {
       const engine = new MapEngine();
       const result = engine.renderMap({
@@ -200,6 +213,57 @@ describe('MapEngine', () => {
       });
       
       expect(result.svg).toContain('Custom Map');
+    });
+    
+    it('should use default color for markers with invalid color', () => {
+      const engine = new MapEngine();
+      const markers: MapMarker[] = [
+        {
+          location: { latitude: 51.5074, longitude: -0.1278 },
+          style: { color: 'invalid<script>alert(1)</script>' },
+        },
+      ];
+      
+      const result = engine.renderMap({
+        style: defaultMapStyle,
+        width: 800,
+        height: 600,
+        markers,
+      });
+      
+      expect(result.svg).toContain('#e74c3c');
+      expect(result.svg).not.toContain('<script>');
+    });
+    
+    it('should accept valid hex colors for markers', () => {
+      const engine = new MapEngine();
+      const markers: MapMarker[] = [
+        {
+          location: { latitude: 51.5074, longitude: -0.1278 },
+          style: { color: '#00ff00' },
+        },
+      ];
+      
+      const result = engine.renderMap({
+        style: defaultMapStyle,
+        width: 800,
+        height: 600,
+        markers,
+      });
+      
+      expect(result.svg).toContain('#00ff00');
+    });
+    
+    it('should accept named colors for background', () => {
+      const engine = new MapEngine();
+      const result = engine.renderMap({
+        style: defaultMapStyle,
+        width: 800,
+        height: 600,
+        backgroundColor: 'lightblue',
+      });
+      
+      expect(result.svg).toContain('lightblue');
     });
   });
   

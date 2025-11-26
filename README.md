@@ -149,7 +149,7 @@ This project is in active development. See [PLAN.md](docs/PLAN.md) for the full 
 - [x] Custom styling support (colors, sizes)
 - [x] Auto-zoom and auto-center utilities
 - [x] Scale bar and attribution rendering
-- [x] Comprehensive test coverage (114 tests)
+- [x] Comprehensive test coverage (39 new tests for map engine, 114 tests total)
 
 ### Current Phase: Picture Border Engine (Phase 4)
 

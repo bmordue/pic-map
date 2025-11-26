@@ -178,6 +178,13 @@ export function calculateZoomToFit(
 
 /**
  * Calculates the center point for a collection of locations
+ * 
+ * NOTE: This function uses simple arithmetic averaging for longitude, which
+ * produces incorrect results when locations span across the international date
+ * line (longitude ±180°). For example, locations at 170° and -170° would average
+ * to 0° instead of 180°/-180°. This limitation is acceptable for use cases
+ * covering continental regions but may need spherical averaging for global coverage.
+ * 
  * @param locations - Array of locations
  * @returns Center point of all locations
  */

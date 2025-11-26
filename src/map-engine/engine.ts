@@ -29,6 +29,108 @@ const PIN_SHAPE_RATIO = 1 / 3; // Width ratio for pin base
 const PIN_HEIGHT_RATIO = 1.2; // Height ratio for pin top curve
 
 /**
+ * Regex pattern for validating hex CSS color values
+ */
+const HEX_COLOR_PATTERN = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
+
+/**
+ * Validates RGB color values (0-255 for each component)
+ */
+function isValidRgbColor(color: string): boolean {
+  const match = color.match(/^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/);
+  if (!match) return false;
+  const [, r, g, b] = match;
+  return parseInt(r) <= 255 && parseInt(g) <= 255 && parseInt(b) <= 255;
+}
+
+/**
+ * Validates RGBA color values (0-255 for RGB, 0-1 for alpha)
+ */
+function isValidRgbaColor(color: string): boolean {
+  const match = color.match(/^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*([\d.]+)\s*\)$/);
+  if (!match) return false;
+  const [, r, g, b, a] = match;
+  const alpha = parseFloat(a);
+  return parseInt(r) <= 255 && parseInt(g) <= 255 && parseInt(b) <= 255 && alpha >= 0 && alpha <= 1;
+}
+
+/**
+ * Validates HSL color values (0-360 for hue, 0-100 for saturation/lightness)
+ */
+function isValidHslColor(color: string): boolean {
+  const match = color.match(/^hsl\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/);
+  if (!match) return false;
+  const [, h, s, l] = match;
+  return parseInt(h) <= 360 && parseInt(s) <= 100 && parseInt(l) <= 100;
+}
+
+/**
+ * Validates HSLA color values (0-360 for hue, 0-100 for saturation/lightness, 0-1 for alpha)
+ */
+function isValidHslaColor(color: string): boolean {
+  const match = color.match(/^hsla\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*,\s*([\d.]+)\s*\)$/);
+  if (!match) return false;
+  const [, h, s, l, a] = match;
+  const alpha = parseFloat(a);
+  return parseInt(h) <= 360 && parseInt(s) <= 100 && parseInt(l) <= 100 && alpha >= 0 && alpha <= 1;
+}
+
+const NAMED_COLORS = new Set([
+  'aliceblue', 'antiquewhite', 'aqua', 'aquamarine', 'azure', 'beige', 'bisque', 'black',
+  'blanchedalmond', 'blue', 'blueviolet', 'brown', 'burlywood', 'cadetblue', 'chartreuse',
+  'chocolate', 'coral', 'cornflowerblue', 'cornsilk', 'crimson', 'cyan', 'darkblue', 'darkcyan',
+  'darkgoldenrod', 'darkgray', 'darkgreen', 'darkgrey', 'darkkhaki', 'darkmagenta', 'darkolivegreen',
+  'darkorange', 'darkorchid', 'darkred', 'darksalmon', 'darkseagreen', 'darkslateblue', 'darkslategray',
+  'darkslategrey', 'darkturquoise', 'darkviolet', 'deeppink', 'deepskyblue', 'dimgray', 'dimgrey',
+  'dodgerblue', 'firebrick', 'floralwhite', 'forestgreen', 'fuchsia', 'gainsboro', 'ghostwhite',
+  'gold', 'goldenrod', 'gray', 'green', 'greenyellow', 'grey', 'honeydew', 'hotpink', 'indianred',
+  'indigo', 'ivory', 'khaki', 'lavender', 'lavenderblush', 'lawngreen', 'lemonchiffon', 'lightblue',
+  'lightcoral', 'lightcyan', 'lightgoldenrodyellow', 'lightgray', 'lightgreen', 'lightgrey', 'lightpink',
+  'lightsalmon', 'lightseagreen', 'lightskyblue', 'lightslategray', 'lightslategrey', 'lightsteelblue',
+  'lightyellow', 'lime', 'limegreen', 'linen', 'magenta', 'maroon', 'mediumaquamarine', 'mediumblue',
+  'mediumorchid', 'mediumpurple', 'mediumseagreen', 'mediumslateblue', 'mediumspringgreen', 'mediumturquoise',
+  'mediumvioletred', 'midnightblue', 'mintcream', 'mistyrose', 'moccasin', 'navajowhite', 'navy', 'oldlace',
+  'olive', 'olivedrab', 'orange', 'orangered', 'orchid', 'palegoldenrod', 'palegreen', 'paleturquoise',
+  'palevioletred', 'papayawhip', 'peachpuff', 'peru', 'pink', 'plum', 'powderblue', 'purple', 'rebeccapurple',
+  'red', 'rosybrown', 'royalblue', 'saddlebrown', 'salmon', 'sandybrown', 'seagreen', 'seashell', 'sienna',
+  'silver', 'skyblue', 'slateblue', 'slategray', 'slategrey', 'snow', 'springgreen', 'steelblue', 'tan',
+  'teal', 'thistle', 'tomato', 'turquoise', 'violet', 'wheat', 'white', 'whitesmoke', 'yellow', 'yellowgreen',
+]);
+
+/**
+ * Validates a CSS color value for use in SVG attributes
+ * @param color - The color value to validate
+ * @returns true if the color is valid, false otherwise
+ */
+function isValidColor(color: string): boolean {
+  if (!color || typeof color !== 'string') {
+    return false;
+  }
+  const lowerColor = color.toLowerCase().trim();
+  return (
+    HEX_COLOR_PATTERN.test(lowerColor) ||
+    isValidRgbColor(color) ||
+    isValidRgbaColor(color) ||
+    isValidHslColor(color) ||
+    isValidHslaColor(color) ||
+    NAMED_COLORS.has(lowerColor)
+  );
+}
+
+/**
+ * Sanitizes a color value, returning a safe default if invalid
+ * @param color - The color value to sanitize
+ * @param defaultColor - The default color to use if invalid
+ * @returns A safe color value
+ */
+function sanitizeColor(color: string | undefined, defaultColor: string): string {
+  if (color && isValidColor(color)) {
+    return color;
+  }
+  return defaultColor;
+}
+
+/**
  * Map rendering engine
  */
 export class MapEngine {
@@ -38,7 +140,8 @@ export class MapEngine {
    * @returns Rendered map with SVG content
    */
   renderMap(config: MapRenderConfig): RenderedMap {
-    const { style, width, height, markers = [], backgroundColor = '#f0f0f0' } = config;
+    const { style, width, height, markers = [] } = config;
+    const backgroundColor = sanitizeColor(config.backgroundColor, '#f0f0f0');
     
     // Calculate bounds
     const bounds = calculateBounds(style.center, style.zoom, width, height);
@@ -70,7 +173,7 @@ export class MapEngine {
     
     // Add scale if requested
     if (style.showScale) {
-      const scaleSvg = this.renderScale(style.zoom, width, height);
+      const scaleSvg = this.renderScale(style.zoom, width, height, style.center);
       svgParts.push(scaleSvg);
     }
     
@@ -122,7 +225,7 @@ export class MapEngine {
   ): string {
     const pixel = geoToViewportPixel(marker.location, style.center, style.zoom, width, height);
     
-    const color = marker.style?.color || '#e74c3c';
+    const color = sanitizeColor(marker.style?.color, '#e74c3c');
     const size = marker.style?.size || 20;
     const shape = marker.style?.shape || 'pin';
     
@@ -160,9 +263,13 @@ export class MapEngine {
   
   /**
    * Renders a scale bar on the map
+   * @param zoom - The zoom level
+   * @param _width - The width of the map (unused but kept for consistency)
+   * @param height - The height of the map
+   * @param center - The center location of the map, used for accurate scale calculation
    */
-  private renderScale(zoom: number, _width: number, height: number): string {
-    // Calculate scale in meters per pixel at this zoom level
+  private renderScale(zoom: number, _width: number, height: number, center: GeoLocation): string {
+    // Calculate scale in meters per pixel at this zoom level, using center latitude for accuracy
     const metersPerPixel = (156543.03392 * Math.cos((center.latitude * Math.PI) / 180)) / Math.pow(2, zoom);
     
     // Create a scale bar representing a nice round distance
