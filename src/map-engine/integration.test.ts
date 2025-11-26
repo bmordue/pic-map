@@ -21,10 +21,7 @@ describe('Map Engine Integration', () => {
         showScale: true,
         showAttribution: true,
       },
-      images: [
-        { filePath: '/images/img1.jpg' },
-        { filePath: '/images/img2.jpg' },
-      ],
+      images: [{ filePath: '/images/img1.jpg' }, { filePath: '/images/img2.jpg' }],
       links: [
         {
           imageId: '0',
@@ -38,17 +35,17 @@ describe('Map Engine Integration', () => {
         },
       ],
     };
-    
+
     const engine = new MapEngine();
     const markers = MapEngine.createMarkersFromLinks(config.links);
-    
+
     const result = engine.renderMap({
       style: config.map,
       width: 800,
       height: 600,
       markers,
     });
-    
+
     expect(result.svg).toBeDefined();
     expect(result.svg).toContain('<svg');
     expect(result.svg).toContain('</svg>');
@@ -58,28 +55,28 @@ describe('Map Engine Integration', () => {
     expect(result.width).toBe(800);
     expect(result.height).toBe(600);
   });
-  
+
   it('should auto-fit zoom and center for multiple markers', () => {
     const locations = [
       { latitude: 51.5074, longitude: -0.1278 }, // London
-      { latitude: 48.8566, longitude: 2.3522 },  // Paris
-      { latitude: 52.52, longitude: 13.405 },    // Berlin
+      { latitude: 48.8566, longitude: 2.3522 }, // Paris
+      { latitude: 52.52, longitude: 13.405 }, // Berlin
     ];
-    
+
     const center = calculateCenter(locations);
     const zoom = calculateZoomToFit(locations, 1000, 800);
-    
+
     expect(center.latitude).toBeGreaterThan(48);
     expect(center.latitude).toBeLessThan(53);
     expect(zoom).toBeGreaterThan(0);
     expect(zoom).toBeLessThanOrEqual(20);
-    
+
     const engine = new MapEngine();
     const markers = locations.map((location, i) => ({
       location,
       label: String.fromCharCode(65 + i), // A, B, C
     }));
-    
+
     const result = engine.renderMap({
       style: {
         provider: 'openstreetmap',
@@ -92,16 +89,16 @@ describe('Map Engine Integration', () => {
       height: 800,
       markers,
     });
-    
+
     expect(result.svg).toContain('class="marker"');
     expect(result.svg).toContain('>A<');
     expect(result.svg).toContain('>B<');
     expect(result.svg).toContain('>C<');
   });
-  
+
   it('should render map without markers', () => {
     const engine = new MapEngine();
-    
+
     const result = engine.renderMap({
       style: {
         provider: 'openstreetmap',
@@ -113,13 +110,13 @@ describe('Map Engine Integration', () => {
       width: 600,
       height: 400,
     });
-    
+
     expect(result.svg).toBeDefined();
     expect(result.svg).toContain('<svg');
     expect(result.svg).not.toContain('class="marker"');
     expect(result.svg).not.toContain('class="scale"');
   });
-  
+
   it('should handle custom map styling', () => {
     const engine = new MapEngine();
     const markers = [
@@ -133,7 +130,7 @@ describe('Map Engine Integration', () => {
         },
       },
     ];
-    
+
     const result = engine.renderMap({
       style: {
         provider: 'custom',
@@ -147,12 +144,12 @@ describe('Map Engine Integration', () => {
       markers,
       backgroundColor: '#f5f5f5',
     });
-    
+
     expect(result.svg).toContain('#00ff00');
     expect(result.svg).toContain('#f5f5f5');
     expect(result.svg).toContain('Custom Map');
   });
-  
+
   it('should create valid SVG structure', () => {
     const engine = new MapEngine();
     const markers = [
@@ -161,7 +158,7 @@ describe('Map Engine Integration', () => {
         label: 'Test',
       },
     ];
-    
+
     const result = engine.renderMap({
       style: {
         provider: 'openstreetmap',
@@ -172,13 +169,13 @@ describe('Map Engine Integration', () => {
       height: 600,
       markers,
     });
-    
+
     // Check SVG has proper structure
     expect(result.svg).toMatch(/<svg[^>]*xmlns="http:\/\/www\.w3\.org\/2000\/svg"[^>]*>/);
     expect(result.svg).toMatch(/<svg[^>]*width="800"[^>]*>/);
     expect(result.svg).toMatch(/<svg[^>]*height="600"[^>]*>/);
     expect(result.svg).toContain('</svg>');
-    
+
     // SVG should close properly
     const openTags = (result.svg.match(/<svg/g) || []).length;
     const closeTags = (result.svg.match(/<\/svg>/g) || []).length;
