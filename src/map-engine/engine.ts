@@ -149,10 +149,7 @@ export class MapEngine {
     if (marker.label) {
       const labelY = shape === 'pin' ? -size - 5 : 0;
       parts.push(
-        `<text x="0" y="${labelY}" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" stroke="black" stroke-width="3" paint-order="stroke">${this.escapeXml(marker.label)}</text>`
-      );
-      parts.push(
-        `<text x="0" y="${labelY}" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="black">${this.escapeXml(marker.label)}</text>`
+        `<text x="0" y="${labelY}" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="black" stroke="white" stroke-width="3" paint-order="stroke">${this.escapeXml(marker.label)}</text>`
       );
     }
     
