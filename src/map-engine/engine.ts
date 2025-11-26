@@ -166,7 +166,7 @@ export class MapEngine {
    */
   private renderScale(zoom: number, _width: number, height: number): string {
     // Calculate scale in meters per pixel at this zoom level
-    const metersPerPixel = (156543.03392 * Math.cos((0 * Math.PI) / 180)) / Math.pow(2, zoom);
+    const metersPerPixel = (156543.03392 * Math.cos((center.latitude * Math.PI) / 180)) / Math.pow(2, zoom);
     
     // Create a scale bar representing a nice round distance
     const scaleWidthPixels = 100;
