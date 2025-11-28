@@ -252,7 +252,7 @@ function calculateEdgeSlots(
   // Total spacing = (count - 1) * spacing + 2 * spacing for edges
   const totalSpacing = count > 0 ? (count + 1) * spacing : 0;
   const availableLength = edgeLength - totalSpacing;
-  const slotSize = count > 0 ? Math.floor(availableLength / count) : 0;
+  const slotSize = count > 0 ? Math.max(0, Math.floor(availableLength / count)) : 0;
 
   for (let i = 0; i < count; i++) {
     const position = calculateSlotPosition(
