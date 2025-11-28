@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { MapEngine } from '../map-engine';
+import { MapEngine } from '../map-engine/engine';
 import { ExportEngine } from './engine';
 
 describe('Export Engine Integration', () => {
