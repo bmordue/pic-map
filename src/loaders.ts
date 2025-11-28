@@ -4,7 +4,7 @@
 
 import { readFile } from 'fs/promises';
 import { PicMapConfig } from './types';
-import { validatePicMapConfig } from '../validators';
+import { validatePicMapConfig } from './validators';
 
 /**
  * Error thrown when config loading fails
