@@ -36,11 +36,7 @@ export interface DistributionConfig {
  * @param pictureSize - Size of each picture in pixels
  * @returns Number of pictures that fit
  */
-function calculatePictureCount(
-  borderLength: number,
-  spacing: number,
-  pictureSize: number
-): number {
+function calculatePictureCount(borderLength: number, spacing: number, pictureSize: number): number {
   if (pictureSize <= 0) return 0;
   // Total space needed per picture = pictureSize + spacing (spacing between pictures)
   // First picture doesn't need leading spacing

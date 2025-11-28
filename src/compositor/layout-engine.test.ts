@@ -207,10 +207,7 @@ describe('Layout Engine', () => {
           height: 300,
           bounds: { north: 52, south: 51, east: 0, west: -1 },
         },
-        images: [
-          { filePath: '/test/image1.jpg' },
-          { filePath: '/test/image2.jpg' },
-        ],
+        images: [{ filePath: '/test/image1.jpg' }, { filePath: '/test/image2.jpg' }],
         links: [
           { imageIndex: 0, markerPosition: { x: 100, y: 150 }, label: 'A' },
           { imageIndex: 1, markerPosition: { x: 200, y: 100 }, label: 'B' },

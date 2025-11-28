@@ -232,11 +232,13 @@ describe('Compositor', () => {
       const compositor = new Compositor(defaultConfig);
       const config = compositor.getConfig();
 
-      expect(config).toEqual(expect.objectContaining({
-        pageSize: 'A4',
-        orientation: 'landscape',
-        borderWidth: 30,
-      }));
+      expect(config).toEqual(
+        expect.objectContaining({
+          pageSize: 'A4',
+          orientation: 'landscape',
+          borderWidth: 30,
+        })
+      );
 
       // Modifying returned config should not affect compositor
       config.borderWidth = 100;

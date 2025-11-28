@@ -67,9 +67,7 @@ describe('Page Sizes', () => {
     });
 
     it('should throw error when custom dimensions are missing', () => {
-      expect(() => getPageDimensionsMm('custom', 'portrait')).toThrow(
-        'Custom dimensions required'
-      );
+      expect(() => getPageDimensionsMm('custom', 'portrait')).toThrow('Custom dimensions required');
     });
   });
 

@@ -157,10 +157,7 @@ describe('Full Rendering Integration', () => {
         zoom: 10,
         center: { latitude: 40.7128, longitude: -74.006 },
       },
-      images: [
-        { filePath: '/images/statue.jpg' },
-        { filePath: '/images/bridge.jpg' },
-      ],
+      images: [{ filePath: '/images/statue.jpg' }, { filePath: '/images/bridge.jpg' }],
       links: [
         {
           imageId: '0',

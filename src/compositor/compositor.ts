@@ -244,7 +244,9 @@ export class Compositor {
     parts.push('<g class="border-backgrounds">');
 
     for (const [, area] of Object.entries(layout.borderAreas)) {
-      parts.push(`<rect x="${area.x}" y="${area.y}" width="${area.width}" height="${area.height}" fill="${bgColor}"/>`);
+      parts.push(
+        `<rect x="${area.x}" y="${area.y}" width="${area.width}" height="${area.height}" fill="${bgColor}"/>`
+      );
     }
 
     parts.push('</g>');
