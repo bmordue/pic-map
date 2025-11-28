@@ -21,5 +21,7 @@ export * from './loaders';
 // Export map engine
 export * from './map-engine';
 
+// Export link manager
+export * from './link-manager';
 // Export picture border engine
 export * from './picture-border-engine';
