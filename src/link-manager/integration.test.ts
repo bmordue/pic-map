@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { LinkManager, PicturePosition, LinkRenderConfig } from './link-manager';
-import { MapEngine } from '../map-engine';
+import { MapEngine } from '../map-engine/engine';
 import type { PicMapConfig, ImageLocationLink, MapStyle } from '../types';
 
 describe('LinkManager Integration', () => {

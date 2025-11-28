@@ -11,7 +11,7 @@ import {
   MapStyle,
   ImageLocationLink,
   ValidationResult,
-} from '../types';
+} from './types';
 
 /**
  * Validates a geographic location
