@@ -59,7 +59,7 @@ function isValidRgbaColor(color: string): boolean {
   if (!match) return false;
   const [, r, g, b, a] = match;
   const alpha = parseFloat(a);
-  return parseInt(r) <= 255 && parseInt(g) <= 255 && parseInt(b) <= 255 && alpha >= 0 && alpha <= 1;
+  return parseInt(r, 10) <= 255 && parseInt(g, 10) <= 255 && parseInt(b, 10) <= 255 && alpha >= 0 && alpha <= 1;
 }
 
 /**
