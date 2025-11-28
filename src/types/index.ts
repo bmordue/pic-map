@@ -215,3 +215,98 @@ export interface RenderedMap {
   /** Bounding box of the rendered area */
   bounds: BoundingBox;
 }
+
+/**
+ * Edge of the picture border
+ */
+export type BorderEdge = 'top' | 'right' | 'bottom' | 'left';
+
+/**
+ * A slot where a picture can be placed in the border
+ */
+export interface PictureSlot {
+  /** Unique identifier for the slot */
+  id: string;
+  /** Edge of the border where the slot is located */
+  edge: BorderEdge;
+  /** X coordinate of the slot (top-left corner) */
+  x: number;
+  /** Y coordinate of the slot (top-left corner) */
+  y: number;
+  /** Width of the slot in pixels */
+  width: number;
+  /** Height of the slot in pixels */
+  height: number;
+  /** Index of the slot within its edge (0-based) */
+  edgeIndex: number;
+}
+
+/**
+ * A positioned picture with its placement information
+ */
+export interface PositionedPicture {
+  /** The image metadata */
+  image: ImageMetadata;
+  /** The slot where the picture is placed */
+  slot: PictureSlot;
+  /** Actual rendered width (may differ from slot due to aspect ratio) */
+  renderWidth: number;
+  /** Actual rendered height (may differ from slot due to aspect ratio) */
+  renderHeight: number;
+  /** X offset within the slot for centering */
+  offsetX: number;
+  /** Y offset within the slot for centering */
+  offsetY: number;
+  /** Optional label associated with this picture */
+  label?: string;
+  /** Center point of the rendered picture for link drawing */
+  centerX: number;
+  /** Center point of the rendered picture for link drawing */
+  centerY: number;
+}
+
+/**
+ * Border layout information
+ */
+export interface BorderLayout {
+  /** Total width of the page in pixels */
+  pageWidth: number;
+  /** Total height of the page in pixels */
+  pageHeight: number;
+  /** Width of the border area (where pictures go) in pixels */
+  borderWidth: number;
+  /** Inner area where the map is rendered */
+  innerArea: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
+  /** All available picture slots */
+  slots: PictureSlot[];
+  /** Margin in pixels */
+  margin: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
+  /** Spacing between pictures in pixels */
+  pictureSpacing: number;
+}
+
+/**
+ * Rendered picture border output
+ */
+export interface RenderedPictureBorder {
+  /** SVG string containing the picture border */
+  svg: string;
+  /** Width of the border in pixels */
+  width: number;
+  /** Height of the border in pixels */
+  height: number;
+  /** Layout information used for rendering */
+  layout: BorderLayout;
+  /** Positioned pictures with their placement information */
+  positionedPictures: PositionedPicture[];
+}
