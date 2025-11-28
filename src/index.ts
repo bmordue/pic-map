@@ -20,3 +20,6 @@ export * from './loaders';
 
 // Export map engine
 export * from './map-engine';
+
+// Export picture border engine
+export * from './picture-border-engine';
