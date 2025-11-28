@@ -210,12 +210,12 @@ describe('Picture Distribution', () => {
       expect(dist.right).toBe(1);
     });
 
-    it('should distribute 6 pictures with extra on top and bottom', () => {
+    it('should distribute 6 pictures with extra on top and right', () => {
       const dist = distributePicturesAcrossEdges(6);
       expect(dist.top).toBe(2);
-      expect(dist.bottom).toBe(2);
+      expect(dist.right).toBe(2);
+      expect(dist.bottom).toBe(1);
       expect(dist.left).toBe(1);
-      expect(dist.right).toBe(1);
     });
 
     it('should distribute 7 pictures with extra on horizontal and one vertical', () => {
