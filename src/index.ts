@@ -23,3 +23,7 @@ export * from './map-engine';
 
 // Export compositor
 export * from './compositor';
+// Export link manager
+export * from './link-manager';
+// Export picture border engine
+export * from './picture-border-engine';
