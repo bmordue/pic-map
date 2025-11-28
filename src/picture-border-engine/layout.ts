@@ -155,13 +155,13 @@ export function distributePicturesAcrossEdges(pictureCount: number): Record<Bord
   const base = Math.floor(pictureCount / 4);
   const remainder = pictureCount % 4;
 
-  // Distribute remainder starting from top, then bottom (horizontal edges first)
-  return {
-    top: base + (remainder >= 1 ? 1 : 0),
-    bottom: base + (remainder >= 2 ? 1 : 0),
-    left: base + (remainder >= 3 ? 1 : 0),
-    right: base,
-  };
+  // Distribute remainder clockwise
+  const counts: Record<BorderEdge, number> = { top: base, right: base, bottom: base, left: base };
+  const edges: BorderEdge[] = ['top', 'right', 'bottom', 'left'];
+  for (let i = 0; i < remainder; i++) {
+    counts[edges[i]]++;
+  }
+  return counts;
 }
 
 /**
