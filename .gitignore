@@ -144,3 +144,5 @@ vite.config.ts.timestamp-*
 # Example output files
 map-output.svg
 *.output.svg
+map-export.svg
+map-export.pdf
