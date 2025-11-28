@@ -12,7 +12,7 @@
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
 import { loadConfigFromFile } from '../loaders';
-import { MapEngine } from '../map-engine';
+import { MapEngine } from '../map-engine/engine';
 import { ExportEngine, ExportFormat } from '../export-engine';
 
 async function exportMapExample(format?: string, outputFile?: string): Promise<void> {
