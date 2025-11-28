@@ -151,9 +151,17 @@ This project is in active development. See [PLAN.md](docs/PLAN.md) for the full 
 - [x] Scale bar and attribution rendering
 - [x] Comprehensive test coverage (39 new tests for map engine, 114 tests total)
 
+**Phase 7: Export Engine** ✅
+- [x] Implement SVG export with print-ready formatting
+- [x] Implement PDF export using PDFKit
+- [x] Add export configuration options (page sizes, orientation, DPI)
+- [x] Support multiple page size presets (A4, A3, Letter, Legal)
+- [x] Add comprehensive test coverage for export functionality
+
 ### Current Phase: Picture Border Engine (Phase 4)
 
 See [Map Engine Documentation](src/map-engine/README.md) for detailed usage examples.
+See [Export Engine Documentation](src/export-engine/README.md) for export functionality.
 
 ## Contributing
 
