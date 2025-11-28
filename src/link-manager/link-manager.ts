@@ -3,13 +3,7 @@
  * Handles rendering of visual link indicators (lines, numbers, labels)
  */
 
-import {
-  GeoLocation,
-  ImageLocationLink,
-  LinkStyle,
-  PixelCoordinate,
-  MapStyle,
-} from '../types';
+import { GeoLocation, ImageLocationLink, LinkStyle, PixelCoordinate, MapStyle } from '../types';
 import { geoToViewportPixel } from '../map-engine/coordinates';
 
 /**
@@ -389,8 +383,7 @@ export class LinkManager {
       };
 
       // Determine label: use provided label, picture label, or auto-generate
-      const label =
-        link.label ?? picturePosition.label ?? this.generateLabel(labelIndex);
+      const label = link.label ?? picturePosition.label ?? this.generateLabel(labelIndex);
 
       resolvedLinks.push({
         link,
@@ -508,9 +501,7 @@ export class LinkManager {
    * @param style - Partial style configuration
    * @returns Complete style configuration with defaults applied
    */
-  private normalizeStyle(
-    style: LinkStyle
-  ): Required<Omit<LinkStyle, 'labelStyle'>> & {
+  private normalizeStyle(style: LinkStyle): Required<Omit<LinkStyle, 'labelStyle'>> & {
     labelStyle: Required<NonNullable<LinkStyle['labelStyle']>>;
   } {
     return {
@@ -642,20 +633,24 @@ export class LinkManager {
 
     for (const resolved of resolvedLinks) {
       // Label near the picture
-      parts.push(this.renderLabelAtPosition(
-        resolved.picturePosition.connectionPoint,
-        resolved.label,
-        style.labelStyle,
-        'picture'
-      ));
+      parts.push(
+        this.renderLabelAtPosition(
+          resolved.picturePosition.connectionPoint,
+          resolved.label,
+          style.labelStyle,
+          'picture'
+        )
+      );
 
       // Label near the marker
-      parts.push(this.renderLabelAtPosition(
-        resolved.markerPosition,
-        resolved.label,
-        style.labelStyle,
-        'marker'
-      ));
+      parts.push(
+        this.renderLabelAtPosition(
+          resolved.markerPosition,
+          resolved.label,
+          style.labelStyle,
+          'marker'
+        )
+      );
     }
 
     parts.push('</g>');
@@ -722,10 +717,7 @@ export class LinkManager {
    * @param picturePositions - Array of picture positions
    * @returns Array of validation error messages
    */
-  static validateLinks(
-    links: ImageLocationLink[],
-    picturePositions: PicturePosition[]
-  ): string[] {
+  static validateLinks(links: ImageLocationLink[], picturePositions: PicturePosition[]): string[] {
     const errors: string[] = [];
     const positionIds = new Set(picturePositions.map((p) => p.imageId));
 
@@ -802,14 +794,20 @@ export class LinkManager {
         connectionY = y;
       } else if (distance < 2 * innerWidth + innerHeight) {
         // Bottom edge (reversed direction)
-        x = borderConfig.totalWidth - borderConfig.borderWidth - (distance - innerWidth - innerHeight);
+        x =
+          borderConfig.totalWidth -
+          borderConfig.borderWidth -
+          (distance - innerWidth - innerHeight);
         y = borderConfig.totalHeight - borderConfig.borderWidth / 2;
         connectionX = x;
         connectionY = borderConfig.totalHeight - borderConfig.borderWidth;
       } else {
         // Left edge (reversed direction)
         x = borderConfig.borderWidth / 2;
-        y = borderConfig.totalHeight - borderConfig.borderWidth - (distance - 2 * innerWidth - innerHeight);
+        y =
+          borderConfig.totalHeight -
+          borderConfig.borderWidth -
+          (distance - 2 * innerWidth - innerHeight);
         connectionX = borderConfig.borderWidth;
         connectionY = y;
       }

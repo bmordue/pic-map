@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  LinkManager,
-  PicturePosition,
-  ResolvedLink,
-  LinkRenderConfig,
-} from './link-manager';
+import { LinkManager, PicturePosition, ResolvedLink, LinkRenderConfig } from './link-manager';
 import type { ImageLocationLink, MapStyle } from '../types';
 
 describe('LinkManager', () => {
@@ -177,8 +172,12 @@ describe('LinkManager', () => {
       const resolved = manager.resolveLinks(links, positions, defaultLinkRenderConfig);
 
       // Marker position should include the viewport offset
-      expect(resolved[0].markerPosition.x).toBeGreaterThan(defaultLinkRenderConfig.mapViewport.offsetX);
-      expect(resolved[0].markerPosition.y).toBeGreaterThan(defaultLinkRenderConfig.mapViewport.offsetY);
+      expect(resolved[0].markerPosition.x).toBeGreaterThan(
+        defaultLinkRenderConfig.mapViewport.offsetX
+      );
+      expect(resolved[0].markerPosition.y).toBeGreaterThan(
+        defaultLinkRenderConfig.mapViewport.offsetY
+      );
     });
   });
 

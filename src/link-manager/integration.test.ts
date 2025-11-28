@@ -90,11 +90,7 @@ describe('LinkManager Integration', () => {
         },
       };
 
-      const linkResult = linkManager.renderAllLinks(
-        config.links,
-        picturePositions,
-        linkConfig
-      );
+      const linkResult = linkManager.renderAllLinks(config.links, picturePositions, linkConfig);
 
       // Verify map was rendered with markers
       expect(mapResult.svg).toContain('<svg');
