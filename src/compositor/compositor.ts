@@ -41,7 +41,10 @@ const DEFAULT_LINK_STYLE: LinkStyle = {
 };
 
 /**
- * Regex pattern for validating hex CSS color values
+ * Regex pattern for validating hex CSS color values.
+ * Supports 3-digit (#RGB) and 6-digit (#RRGGBB) formats.
+ * Note: 8-digit hex colors with alpha channels (#RRGGBBAA) are not supported.
+ * For print output, alpha channels are generally avoided in favor of solid colors.
  */
 const HEX_COLOR_PATTERN = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 
@@ -271,17 +274,18 @@ export class Compositor {
     const scaleX = mapArea.width / input.map.width;
     const scaleY = mapArea.height / input.map.height;
     const scale = Math.min(scaleX, scaleY);
-
-    if (scale !== 1) {
-      parts.push(`<g transform="scale(${scale})">`);
-    }
+    const needsScaling = scale !== 1;
 
     // Extract inner SVG content (remove the outer <svg> tags)
     const mapContent = this.extractSvgContent(input.map.svg);
-    parts.push(mapContent);
 
-    if (scale !== 1) {
+    // Apply scaling transform if needed, then add map content
+    if (needsScaling) {
+      parts.push(`<g transform="scale(${scale})">`);
+      parts.push(mapContent);
       parts.push('</g>');
+    } else {
+      parts.push(mapContent);
     }
 
     parts.push('</g>');
@@ -291,10 +295,13 @@ export class Compositor {
   }
 
   /**
-   * Extracts the content from an SVG string (removes outer svg tags)
+   * Extracts the content from an SVG string (removes outer svg tags).
+   * Note: This uses simple regex replacement which works for well-formed SVG
+   * with a single root <svg> element. For complex SVG with nested <svg> elements,
+   * a proper XML parser would be more robust.
    */
   private extractSvgContent(svg: string): string {
-    // Remove opening <svg ...> tag
+    // Remove opening <svg ...> tag (handles both <svg ...> and self-closing won't have content)
     let content = svg.replace(/<svg[^>]*>/i, '');
     // Remove closing </svg> tag
     content = content.replace(/<\/svg>/i, '');

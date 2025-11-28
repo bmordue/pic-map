@@ -123,10 +123,15 @@ export function distributePictures(
   // If we have more images than capacity, we need to scale down
   let adjustedPictureSize = pictureSize;
   if (images.length > totalCapacity && totalCapacity > 0) {
-    // Calculate a smaller size to fit more pictures
+    // Calculate a smaller size to fit more pictures.
+    // We use square root scaling because reducing picture size by a linear factor
+    // increases capacity proportionally in both border dimensions (width and count),
+    // but we want to minimize the size reduction while fitting all images.
+    // sqrt(scaleFactor) provides a balanced reduction that approximately doubles
+    // capacity when the scale factor is 0.5.
     const scaleFactor = totalCapacity / images.length;
     adjustedPictureSize = pictureSize * Math.sqrt(scaleFactor);
-    // Recalculate capacities
+    // Recalculate capacities with the adjusted picture size
     for (const pos of positions) {
       capacities[pos] = calculatePictureCount(borderLengths[pos], spacing, adjustedPictureSize);
     }
