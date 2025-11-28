@@ -5,13 +5,7 @@
  */
 
 import PDFDocument from 'pdfkit';
-import {
-  ExportConfig,
-  ExportResult,
-  ExportInput,
-  PAGE_SIZES,
-  PageSizePreset,
-} from './types';
+import { ExportConfig, ExportResult, ExportInput, PAGE_SIZES, PageSizePreset } from './types';
 
 /**
  * Convert millimeters to PDF points (1 inch = 72 points)
@@ -338,10 +332,7 @@ function drawElement(
  * @param config - Export configuration options
  * @returns Promise resolving to export result with PDF buffer
  */
-export async function exportToPdf(
-  input: ExportInput,
-  config: ExportConfig
-): Promise<ExportResult> {
+export async function exportToPdf(input: ExportInput, config: ExportConfig): Promise<ExportResult> {
   const dpi = config.dpi || 300;
   const { width: widthPt, height: heightPt } = getPageDimensionsInPoints(
     config.pageSize,

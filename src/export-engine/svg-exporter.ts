@@ -4,13 +4,7 @@
  * Handles SVG export with proper print-ready formatting
  */
 
-import {
-  ExportConfig,
-  ExportResult,
-  ExportInput,
-  PAGE_SIZES,
-  PageSizePreset,
-} from './types';
+import { ExportConfig, ExportResult, ExportInput, PAGE_SIZES, PageSizePreset } from './types';
 
 /**
  * Get page dimensions in millimeters based on config
@@ -116,9 +110,7 @@ export function exportToSvg(input: ExportInput, config: ExportConfig): ExportRes
   const offsetX = (widthPx - scaledWidth) / 2;
   const offsetY = (heightPx - scaledHeight) / 2;
 
-  svgParts.push(
-    `  <g transform="translate(${offsetX}, ${offsetY}) scale(${scale})">`
-  );
+  svgParts.push(`  <g transform="translate(${offsetX}, ${offsetY}) scale(${scale})">`);
   svgParts.push(innerContent);
   svgParts.push('  </g>');
 
