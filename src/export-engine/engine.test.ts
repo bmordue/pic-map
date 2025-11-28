@@ -174,6 +174,23 @@ describe('ExportEngine', () => {
       const pdfHeader = (result.data as Buffer).subarray(0, 4).toString('utf-8');
       expect(pdfHeader).toBe('%PDF');
     });
+
+    it('should handle SVG with single-quoted attributes', async () => {
+      const singleQuoteSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">
+        <rect width='100' height='100' fill='#ff0000'/>
+        <circle cx='150' cy='150' r='30' fill='blue'/>
+      </svg>`;
+      const engine = new ExportEngine();
+      const result = await engine.exportToPdf(
+        { svg: singleQuoteSvg, width: 200, height: 200 },
+        { pageSize: 'A4' }
+      );
+
+      expect(result.format).toBe('pdf');
+      expect(Buffer.isBuffer(result.data)).toBe(true);
+      const pdfHeader = (result.data as Buffer).subarray(0, 4).toString('utf-8');
+      expect(pdfHeader).toBe('%PDF');
+    });
   });
 
   describe('generic export method', () => {

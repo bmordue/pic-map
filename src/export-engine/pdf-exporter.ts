@@ -111,14 +111,17 @@ interface SvgElement {
 
 /**
  * Extract attributes from an SVG element string
+ * Handles double-quoted and single-quoted attribute values
  */
 function extractAttributes(elementStr: string): Record<string, string> {
   const attrs: Record<string, string> = {};
-  const attrRegex = /(\w[\w-]*)\s*=\s*"([^"]*)"/g;
+  // Match attributes with double quotes, single quotes, or unquoted values
+  const attrRegex = /(\w[\w-]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|(\S+))/g;
   let match: RegExpExecArray | null;
 
   while ((match = attrRegex.exec(elementStr)) !== null) {
-    attrs[match[1]] = match[2];
+    // Value is in group 2 (double quote), 3 (single quote), or 4 (unquoted)
+    attrs[match[1]] = match[2] ?? match[3] ?? match[4];
   }
 
   return attrs;
@@ -253,8 +256,10 @@ function drawElement(
     }
 
     case 'path': {
-      // For now, we'll draw paths as simple shapes
-      // Full SVG path parsing would require a more comprehensive parser
+      // Render SVG paths using PDFKit's path() method
+      // Supports standard SVG path commands (M, L, H, V, C, S, Q, T, A, Z)
+      // Note: Some advanced path features like transform attributes on paths
+      // may not be fully supported; these should be pre-processed if needed
       const d = attrs['d'];
       const fill = attrs['fill'];
       const stroke = attrs['stroke'];
@@ -301,13 +306,14 @@ function drawElement(
         align = 'right';
       }
 
-      // Decode HTML entities
+      // Decode HTML entities - decode &amp; last to prevent double-decoding
+      // For example, "&amp;lt;" should become "&lt;", not "<"
       const decodedText = text
-        .replace(/&amp;/g, '&')
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/&quot;/g, '"')
-        .replace(/&apos;/g, "'");
+        .replace(/&apos;/g, "'")
+        .replace(/&amp;/g, '&');
 
       // Adjust y position to account for baseline differences
       const adjustedY = y - fontSize * 0.8;

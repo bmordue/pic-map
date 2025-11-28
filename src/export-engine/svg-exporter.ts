@@ -76,6 +76,8 @@ export function exportToSvg(input: ExportInput, config: ExportConfig): ExportRes
   const heightPx = mmToPixels(heightMm, dpi);
 
   // Parse the input SVG to extract the content inside the svg element
+  // This regex handles the most common case of SVG content from our MapEngine
+  // For nested SVG elements, the entire input is used as fallback
   const svgContentMatch = input.svg.match(/<svg[^>]*>([\s\S]*)<\/svg>/i);
   const innerContent = svgContentMatch ? svgContentMatch[1] : input.svg;
 
