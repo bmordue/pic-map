@@ -161,3 +161,57 @@ export interface ValidationResult {
   /** Error messages if validation failed */
   errors: string[];
 }
+
+/**
+ * Pixel coordinates for rendering
+ */
+export interface PixelCoordinate {
+  /** X coordinate in pixels */
+  x: number;
+  /** Y coordinate in pixels */
+  y: number;
+}
+
+/**
+ * Bounding box for map area
+ */
+export interface BoundingBox {
+  /** North latitude */
+  north: number;
+  /** South latitude */
+  south: number;
+  /** East longitude */
+  east: number;
+  /** West longitude */
+  west: number;
+}
+
+/**
+ * Map marker configuration
+ */
+export interface MapMarker {
+  /** Geographic location of the marker */
+  location: GeoLocation;
+  /** Label to display on/near the marker */
+  label?: string;
+  /** Marker style/color */
+  style?: {
+    color?: string;
+    size?: number;
+    shape?: 'circle' | 'pin' | 'square';
+  };
+}
+
+/**
+ * Rendered map output
+ */
+export interface RenderedMap {
+  /** SVG string containing the map */
+  svg: string;
+  /** Width of the map in pixels */
+  width: number;
+  /** Height of the map in pixels */
+  height: number;
+  /** Bounding box of the rendered area */
+  bounds: BoundingBox;
+}

@@ -17,3 +17,6 @@ export * from './validators';
 
 // Export loaders
 export * from './loaders';
+
+// Export map engine
+export * from './map-engine';
