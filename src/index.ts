@@ -20,3 +20,6 @@ export * from './loaders';
 
 // Export map engine
 export * from './map-engine';
+
+// Export compositor
+export * from './compositor';
