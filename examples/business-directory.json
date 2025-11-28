@@ -1,0 +1,157 @@
+{
+  "title": "Downtown San Francisco Business Directory",
+  "description": "Local businesses and services in the Financial District and SoMa",
+  "layout": {
+    "pageSize": "Letter",
+    "orientation": "portrait",
+    "borderWidth": 45,
+    "pictureSpacing": 6,
+    "margin": {
+      "top": 15,
+      "right": 15,
+      "bottom": 15,
+      "left": 15
+    }
+  },
+  "map": {
+    "provider": "openstreetmap",
+    "zoom": 15,
+    "center": {
+      "latitude": 37.7879,
+      "longitude": -122.4006,
+      "name": "Downtown San Francisco",
+      "description": "Financial District and South of Market"
+    },
+    "showScale": true,
+    "showAttribution": true
+  },
+  "pictureBorder": {
+    "backgroundColor": "#ffffff",
+    "borderColor": "#1a1a1a",
+    "borderThickness": 2,
+    "cornerRadius": 4
+  },
+  "linkStyle": {
+    "type": "label",
+    "lineColor": "#333333",
+    "lineWidth": 1,
+    "lineStyle": "solid",
+    "labelStyle": {
+      "fontFamily": "Helvetica, Arial, sans-serif",
+      "fontSize": 12,
+      "color": "#1a1a1a"
+    }
+  },
+  "images": [
+    {
+      "filePath": "/images/business/cafe-blue.jpg",
+      "caption": "Blue Bottle Coffee",
+      "altText": "Interior of Blue Bottle Coffee shop",
+      "dimensions": {
+        "width": 800,
+        "height": 600
+      }
+    },
+    {
+      "filePath": "/images/business/bakery-tartine.jpg",
+      "caption": "Tartine Bakery",
+      "altText": "Fresh bread display at Tartine",
+      "dimensions": {
+        "width": 800,
+        "height": 600
+      }
+    },
+    {
+      "filePath": "/images/business/restaurant-hog.jpg",
+      "caption": "Hog Island Oyster Co.",
+      "altText": "Fresh oysters at Hog Island",
+      "dimensions": {
+        "width": 800,
+        "height": 600
+      }
+    },
+    {
+      "filePath": "/images/business/bookstore-city.jpg",
+      "caption": "City Lights Bookstore",
+      "altText": "Historic City Lights bookstore facade",
+      "dimensions": {
+        "width": 600,
+        "height": 800
+      }
+    },
+    {
+      "filePath": "/images/business/gallery-sfmoma.jpg",
+      "caption": "SFMOMA",
+      "altText": "San Francisco Museum of Modern Art",
+      "dimensions": {
+        "width": 800,
+        "height": 600
+      }
+    },
+    {
+      "filePath": "/images/business/market-ferry.jpg",
+      "caption": "Ferry Building Marketplace",
+      "altText": "Interior of Ferry Building",
+      "dimensions": {
+        "width": 800,
+        "height": 600
+      }
+    }
+  ],
+  "links": [
+    {
+      "imageId": "0",
+      "location": {
+        "latitude": 37.7825,
+        "longitude": -122.4078,
+        "name": "Blue Bottle Coffee"
+      },
+      "label": "1"
+    },
+    {
+      "imageId": "1",
+      "location": {
+        "latitude": 37.7614,
+        "longitude": -122.4241,
+        "name": "Tartine Bakery"
+      },
+      "label": "2"
+    },
+    {
+      "imageId": "2",
+      "location": {
+        "latitude": 37.7956,
+        "longitude": -122.3936,
+        "name": "Hog Island Oyster Co."
+      },
+      "label": "3"
+    },
+    {
+      "imageId": "3",
+      "location": {
+        "latitude": 37.7976,
+        "longitude": -122.4064,
+        "name": "City Lights Bookstore"
+      },
+      "label": "4"
+    },
+    {
+      "imageId": "4",
+      "location": {
+        "latitude": 37.7857,
+        "longitude": -122.4011,
+        "name": "SFMOMA"
+      },
+      "label": "5"
+    },
+    {
+      "imageId": "5",
+      "location": {
+        "latitude": 37.7956,
+        "longitude": -122.3935,
+        "name": "Ferry Building"
+      },
+      "label": "6"
+    }
+  ]
+}
