@@ -218,12 +218,12 @@ describe('Picture Distribution', () => {
       expect(dist.left).toBe(1);
     });
 
-    it('should distribute 7 pictures with extra on horizontal and one vertical', () => {
+    it('should distribute 7 pictures clockwise starting from top (top=2, right=2, bottom=2, left=1)', () => {
       const dist = distributePicturesAcrossEdges(7);
       expect(dist.top).toBe(2);
+      expect(dist.right).toBe(2);
       expect(dist.bottom).toBe(2);
-      expect(dist.left).toBe(2);
-      expect(dist.right).toBe(1);
+      expect(dist.left).toBe(1);
     });
 
     it('should sum to total picture count', () => {
