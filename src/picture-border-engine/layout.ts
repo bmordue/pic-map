@@ -345,7 +345,8 @@ export function calculateFitDimensions(
   maxHeight: number
 ): { width: number; height: number } {
   if (originalWidth <= 0 || originalHeight <= 0) {
-    return { width: 0, height: 0 };
+    // If original dimensions are invalid, return the maximum available dimensions
+    return { width: maxWidth, height: maxHeight };
   }
 
   const aspectRatio = originalWidth / originalHeight;
