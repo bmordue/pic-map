@@ -3,7 +3,7 @@
  */
 
 import { readFile } from 'fs/promises';
-import { PicMapConfig } from '../types';
+import { PicMapConfig } from './types';
 import { validatePicMapConfig } from '../validators';
 
 /**
