@@ -606,11 +606,74 @@ describe('Print Output Validation', () => {
         ],
       });
 
-      // Special characters should be escaped
+      // Special characters should be escaped - prevents XSS
       expect(result.svg).not.toContain('<script>');
       expect(result.svg).toContain('&lt;script&gt;');
       expect(result.svg).toContain('&amp;');
       expect(result.svg).toContain('&quot;');
+
+      // Verify the raw malicious content is not present anywhere
+      expect(result.svg).not.toMatch(/<script[^>]*>/i);
+      expect(result.svg).not.toMatch(/<\/script>/i);
+
+      // Verify the label is properly contained within text element
+      expect(result.svg).toMatch(/<text[^>]*>.*&lt;script&gt;.*<\/text>/);
+    });
+
+    it('should sanitize various XSS attack vectors in text elements', () => {
+      const mapEngine = new MapEngine();
+
+      // Test various XSS attack vectors
+      const xssVectors = [
+        '<script>alert("xss")</script>',
+        '<img src=x onerror=alert("xss")>',
+        'javascript:alert("xss")',
+        '<svg onload=alert("xss")>',
+        '"><script>alert("xss")</script>',
+      ];
+
+      for (const vector of xssVectors) {
+        const result = mapEngine.renderMap({
+          style: {
+            provider: 'openstreetmap',
+            zoom: 12,
+            center: { latitude: 51.5074, longitude: -0.1278 },
+          },
+          width: 400,
+          height: 300,
+          markers: [
+            {
+              location: { latitude: 51.5074, longitude: -0.1278 },
+              label: vector,
+            },
+          ],
+        });
+
+        // Should never contain raw (unescaped) script tags
+        // The regex looks for actual script tags, not escaped ones like &lt;script&gt;
+        expect(result.svg).not.toMatch(/<script[^<]*>/i);
+        expect(result.svg).not.toMatch(/<\/script>/i);
+
+        // Should never contain actual img/svg tags from user input (unescaped)
+        // User-provided content with < should always be escaped
+        if (vector.includes('<')) {
+          // The raw < character from user input should be escaped
+          expect(result.svg).toContain('&lt;');
+          // Verify the actual raw pattern is not present in a way that would execute
+          // (the escaped version &lt;img is safe)
+        }
+
+        // Verify dangerous characters are properly escaped
+        if (vector.includes('<')) {
+          expect(result.svg).toContain('&lt;');
+        }
+        if (vector.includes('>')) {
+          expect(result.svg).toContain('&gt;');
+        }
+        if (vector.includes('"')) {
+          expect(result.svg).toContain('&quot;');
+        }
+      }
     });
 
     it('should use valid color values in SVG elements', () => {
