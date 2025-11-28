@@ -105,7 +105,13 @@ function isValidRgbaColor(color: string): boolean {
   if (!match) return false;
   const [, r, g, b, a] = match;
   const alpha = parseFloat(a);
-  return parseInt(r) <= 255 && parseInt(g) <= 255 && parseInt(b) <= 255 && alpha >= 0 && alpha <= 1;
+  return (
+    parseInt(r, 10) <= 255 &&
+    parseInt(g, 10) <= 255 &&
+    parseInt(b, 10) <= 255 &&
+    alpha >= 0 &&
+    alpha <= 1
+  );
 }
 
 /**
@@ -115,7 +121,7 @@ function isValidHslColor(color: string): boolean {
   const match = color.match(/^hsl\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)$/);
   if (!match) return false;
   const [, h, s, l] = match;
-  return parseInt(h) <= 360 && parseInt(s) <= 100 && parseInt(l) <= 100;
+  return parseInt(h, 10) <= 360 && parseInt(s, 10) <= 100 && parseInt(l, 10) <= 100;
 }
 
 /**
@@ -128,7 +134,13 @@ function isValidHslaColor(color: string): boolean {
   if (!match) return false;
   const [, h, s, l, a] = match;
   const alpha = parseFloat(a);
-  return parseInt(h) <= 360 && parseInt(s) <= 100 && parseInt(l) <= 100 && alpha >= 0 && alpha <= 1;
+  return (
+    parseInt(h, 10) <= 360 &&
+    parseInt(s, 10) <= 100 &&
+    parseInt(l, 10) <= 100 &&
+    alpha >= 0 &&
+    alpha <= 1
+  );
 }
 
 const NAMED_COLORS = new Set([
