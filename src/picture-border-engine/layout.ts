@@ -402,7 +402,12 @@ export function positionPicturesInSlots(
     const imageDims = image.dimensions || defaultDimensions;
 
     // Calculate fit dimensions preserving aspect ratio
-    const fitDims = calculateFitDimensions(imageDims.width, imageDims.height, slot.width, slot.height);
+    const fitDims = calculateFitDimensions(
+      imageDims.width,
+      imageDims.height,
+      slot.width,
+      slot.height
+    );
 
     // Calculate centering offset within the slot
     const offsetX = Math.round((slot.width - fitDims.width) / 2);
