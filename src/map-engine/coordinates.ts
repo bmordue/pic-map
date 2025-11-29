@@ -130,6 +130,11 @@ export function geoToViewportPixel(
 
 /**
  * Calculates the appropriate zoom level to fit all markers within a viewport
+ *
+ * This implementation correctly handles Mercator projection distortion by converting
+ * the geographic bounding box to pixel coordinates at a reference zoom level (0)
+ * and then determining the zoom needed to fit that pixel box into the viewport.
+ *
  * @param locations - Array of locations to fit
  * @param widthPixels - Width of the viewport in pixels
  * @param heightPixels - Height of the viewport in pixels
@@ -159,18 +164,26 @@ export function calculateZoomToFit(
   const minLng = Math.min(...lngs);
   const maxLng = Math.max(...lngs);
 
-  // Apply padding
-  const latRange = (maxLat - minLat) * (1 + padding);
-  const lngRange = (maxLng - minLng) * (1 + padding);
+  // Calculate the zoom level required to fit the bounding box.
+  // This approach correctly handles Mercator projection distortion by converting
+  // the geographic bounding box to pixel coordinates at a reference zoom level (0)
+  // and then determining the zoom needed to fit that pixel box into the viewport.
+  const northEast = geoToPixel({ latitude: maxLat, longitude: maxLng }, 0);
+  const southWest = geoToPixel({ latitude: minLat, longitude: minLng }, 0);
 
-  // Calculate zoom level for latitude
-  const latZoom = Math.log2((heightPixels * 180) / (latRange * TILE_SIZE));
+  const lngRange = Math.abs(northEast.x - southWest.x);
+  const latRange = Math.abs(northEast.y - southWest.y);
 
-  // Calculate zoom level for longitude
-  const lngZoom = Math.log2((widthPixels * 360) / (lngRange * TILE_SIZE));
+  // Apply padding to the viewport size for a margin
+  const paddedWidth = widthPixels / (1 + padding);
+  const paddedHeight = heightPixels / (1 + padding);
+
+  // If the range is 0, default to a high zoom level.
+  const zoomForLng = lngRange > 0 ? Math.log2(paddedWidth / lngRange) : 20;
+  const zoomForLat = latRange > 0 ? Math.log2(paddedHeight / latRange) : 20;
 
   // Use the smaller zoom to ensure everything fits
-  const zoom = Math.floor(Math.min(latZoom, lngZoom));
+  const zoom = Math.floor(Math.min(zoomForLng, zoomForLat));
 
   // Clamp to valid zoom range
   return Math.max(0, Math.min(20, zoom));
