@@ -1,0 +1,149 @@
+{
+  "title": "European Adventure 2024",
+  "description": "A travel map showcasing highlights from a European backpacking trip",
+  "layout": {
+    "pageSize": "A3",
+    "orientation": "landscape",
+    "borderWidth": 70,
+    "pictureSpacing": 12,
+    "margin": {
+      "top": 25,
+      "right": 25,
+      "bottom": 25,
+      "left": 25
+    }
+  },
+  "map": {
+    "provider": "openstreetmap",
+    "zoom": 5,
+    "center": {
+      "latitude": 48.2082,
+      "longitude": 7.5497,
+      "name": "Central Europe",
+      "description": "Geographic center of the trip"
+    },
+    "showScale": true,
+    "showAttribution": true
+  },
+  "pictureBorder": {
+    "backgroundColor": "#fafafa",
+    "borderColor": "#2c3e50",
+    "borderThickness": 3,
+    "cornerRadius": 8
+  },
+  "linkStyle": {
+    "type": "both",
+    "lineColor": "#e74c3c",
+    "lineWidth": 2,
+    "lineStyle": "solid",
+    "labelStyle": {
+      "fontFamily": "Georgia, serif",
+      "fontSize": 16,
+      "color": "#2c3e50"
+    }
+  },
+  "images": [
+    {
+      "filePath": "/images/travel/paris-eiffel.jpg",
+      "caption": "Eiffel Tower at Sunset",
+      "altText": "The Eiffel Tower illuminated at sunset",
+      "credit": "Personal photo",
+      "dimensions": {
+        "width": 2400,
+        "height": 1600
+      }
+    },
+    {
+      "filePath": "/images/travel/rome-colosseum.jpg",
+      "caption": "The Colosseum",
+      "altText": "Ancient Roman Colosseum",
+      "credit": "Personal photo",
+      "dimensions": {
+        "width": 2400,
+        "height": 1600
+      }
+    },
+    {
+      "filePath": "/images/travel/barcelona-sagrada.jpg",
+      "caption": "Sagrada Família",
+      "altText": "Gaudí's famous basilica in Barcelona",
+      "credit": "Personal photo",
+      "dimensions": {
+        "width": 1600,
+        "height": 2400
+      }
+    },
+    {
+      "filePath": "/images/travel/amsterdam-canals.jpg",
+      "caption": "Amsterdam Canals",
+      "altText": "Historic canal houses in Amsterdam",
+      "credit": "Personal photo",
+      "dimensions": {
+        "width": 2400,
+        "height": 1600
+      }
+    },
+    {
+      "filePath": "/images/travel/berlin-gate.jpg",
+      "caption": "Brandenburg Gate",
+      "altText": "The iconic Brandenburg Gate in Berlin",
+      "credit": "Personal photo",
+      "dimensions": {
+        "width": 2400,
+        "height": 1600
+      }
+    }
+  ],
+  "links": [
+    {
+      "imageId": "0",
+      "location": {
+        "latitude": 48.8584,
+        "longitude": 2.2945,
+        "name": "Eiffel Tower",
+        "description": "Paris, France"
+      },
+      "label": "A"
+    },
+    {
+      "imageId": "1",
+      "location": {
+        "latitude": 41.8902,
+        "longitude": 12.4922,
+        "name": "Colosseum",
+        "description": "Rome, Italy"
+      },
+      "label": "B"
+    },
+    {
+      "imageId": "2",
+      "location": {
+        "latitude": 41.4036,
+        "longitude": 2.1744,
+        "name": "Sagrada Família",
+        "description": "Barcelona, Spain"
+      },
+      "label": "C"
+    },
+    {
+      "imageId": "3",
+      "location": {
+        "latitude": 52.3676,
+        "longitude": 4.9041,
+        "name": "Canal Ring",
+        "description": "Amsterdam, Netherlands"
+      },
+      "label": "D"
+    },
+    {
+      "imageId": "4",
+      "location": {
+        "latitude": 52.5163,
+        "longitude": 13.3777,
+        "name": "Brandenburg Gate",
+        "description": "Berlin, Germany"
+      },
+      "label": "E"
+    }
+  ]
+}
