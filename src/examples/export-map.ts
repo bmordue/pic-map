@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 /**
- * Example: Export a map to various formats
+ * Example: Export a complete pic-map to various formats
+ *
+ * This exports a full composition including:
+ * - The map area with markers and scale
+ * - Picture borders around the map with image placeholders
+ * - Link lines connecting pictures to map markers
  *
  * Usage: node dist/examples/export-map.js [format] [output-file]
  *
@@ -14,6 +19,8 @@ import { join } from 'path';
 import { loadConfigFromFile } from '../loaders';
 import { MapEngine } from '../map-engine/engine';
 import { ExportEngine, ExportFormat } from '../export-engine';
+import { createCompositorFromLayout } from '../compositor/compositor';
+import { geoToViewportPixel } from '../map-engine/coordinates';
 
 async function exportMapExample(format?: string, outputFile?: string): Promise<void> {
   try {
@@ -23,17 +30,36 @@ async function exportMapExample(format?: string, outputFile?: string): Promise<v
     const config = await loadConfigFromFile(configFile);
 
     console.log(`Configuration loaded: ${config.title}`);
+    console.log(`Number of images: ${config.images.length}`);
+    console.log(`Number of markers: ${config.links.length}`);
 
-    // Create map engine and render
+    // Create compositor with the config layout (300 DPI for print quality)
+    const dpi = 300;
+    const compositor = createCompositorFromLayout(
+      config.layout,
+      config.pictureBorder,
+      config.linkStyle,
+      dpi
+    );
+
+    // Get the layout to determine map area dimensions
+    const initialLayout = compositor.createLayout({
+      map: { svg: '', width: 0, height: 0, bounds: { north: 0, south: 0, east: 0, west: 0 } },
+      images: config.images,
+      links: [],
+    });
+
+    const mapWidth = initialLayout.mapArea.width;
+    const mapHeight = initialLayout.mapArea.height;
+
+    console.log(`\nMap area: ${mapWidth}x${mapHeight}px`);
+
+    // Create map engine and render the map
     const mapEngine = new MapEngine();
     const markers = MapEngine.createMarkersFromLinks(config.links);
 
-    // A4 landscape dimensions at 300 DPI
-    const mapWidth = 3508; // 297mm at 300 DPI
-    const mapHeight = 2480; // 210mm at 300 DPI
-
-    console.log('\nRendering map...');
-    const mapResult = mapEngine.renderMap({
+    console.log('Rendering map...');
+    const renderedMap = mapEngine.renderMap({
       style: config.map,
       width: mapWidth,
       height: mapHeight,
@@ -41,7 +67,38 @@ async function exportMapExample(format?: string, outputFile?: string): Promise<v
       backgroundColor: '#ffffff',
     });
 
-    console.log(`Map rendered: ${mapResult.width}x${mapResult.height}px`);
+    console.log(`Map rendered: ${renderedMap.width}x${renderedMap.height}px`);
+
+    // Calculate marker positions relative to map for link lines
+    const markerPositions = config.links.map((link) => {
+      const pixel = geoToViewportPixel(
+        link.location,
+        config.map.center,
+        config.map.zoom,
+        mapWidth,
+        mapHeight
+      );
+      return {
+        imageIndex: parseInt(link.imageId, 10),
+        markerPosition: pixel,
+        label: link.label,
+      };
+    });
+
+    // Render the full composition
+    console.log('\nComposing full pic-map...');
+    const compositionResult = compositor.render({
+      map: renderedMap,
+      images: config.images,
+      links: markerPositions,
+    });
+
+    console.log(
+      `Composition rendered: ${compositionResult.width}x${compositionResult.height}px at ${compositionResult.dpi} DPI`
+    );
+    console.log(
+      `Page size: ${compositionResult.pageSizeMm.width}mm x ${compositionResult.pageSizeMm.height}mm`
+    );
 
     // Determine export format
     const exportFormat: ExportFormat = format === 'pdf' ? 'pdf' : 'svg';
@@ -55,22 +112,22 @@ async function exportMapExample(format?: string, outputFile?: string): Promise<v
 
     const exportResult = await exportEngine.export(
       {
-        svg: mapResult.svg,
-        width: mapResult.width,
-        height: mapResult.height,
+        svg: compositionResult.svg,
+        width: compositionResult.width,
+        height: compositionResult.height,
       },
       {
         format: exportFormat,
-        pageSize: 'A4',
-        orientation: 'landscape',
-        dpi: 300,
+        pageSize: config.layout.pageSize === 'custom' ? 'A4' : config.layout.pageSize,
+        orientation: config.layout.orientation,
+        dpi,
         title: config.title,
         author: 'Pic-Map',
       }
     );
 
     console.log(`Export complete: ${exportResult.widthMm}mm x ${exportResult.heightMm}mm`);
-    console.log(`Resolution: ${exportResult.widthPx}x${exportResult.heightPx}px at 300 DPI`);
+    console.log(`Resolution: ${exportResult.widthPx}x${exportResult.heightPx}px at ${dpi} DPI`);
 
     // Write output file
     if (exportFormat === 'pdf') {
@@ -80,11 +137,15 @@ async function exportMapExample(format?: string, outputFile?: string): Promise<v
     }
 
     console.log(`\nExported to: ${outputPath}`);
+    console.log('\nThe output includes:');
+    console.log(`  - Map area with ${config.links.length} markers`);
+    console.log(`  - Picture border with ${config.images.length} image placeholders`);
+    console.log('  - Link lines connecting pictures to map markers');
 
     if (exportFormat === 'svg') {
-      console.log('You can open this file in a web browser or SVG editor.');
+      console.log('\nYou can open this file in a web browser or SVG editor.');
     } else {
-      console.log('You can open this file in any PDF viewer.');
+      console.log('\nYou can open this file in any PDF viewer.');
     }
   } catch (error) {
     console.error('Error exporting map:', error);
