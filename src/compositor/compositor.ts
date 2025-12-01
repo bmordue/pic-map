@@ -144,6 +144,7 @@ export class Compositor {
   render(input: CompositionInput): RenderedComposition {
     const layout = this.createLayout(input);
     const svgParts: string[] = [];
+    const defsParts: string[] = [];
 
     const dpi = this.config.dpi ?? DEFAULT_DPI;
 
@@ -153,6 +154,16 @@ export class Compositor {
         `width="${layout.pageDimensions.width}" height="${layout.pageDimensions.height}" ` +
         `viewBox="0 0 ${layout.pageDimensions.width} ${layout.pageDimensions.height}">`
     );
+
+    // Collect defs for pictures (clip paths and gradients)
+    this.collectPictureDefs(layout.pictures, defsParts);
+
+    // Add collected defs
+    if (defsParts.length > 0) {
+      svgParts.push('<defs>');
+      svgParts.push(...defsParts);
+      svgParts.push('</defs>');
+    }
 
     // Background
     svgParts.push(
@@ -195,6 +206,36 @@ export class Compositor {
       dpi,
       pageSizeMm,
     };
+  }
+
+  /**
+   * Collects SVG defs for all pictures (clip paths and gradients)
+   */
+  private collectPictureDefs(pictures: PositionedPicture[], defsParts: string[]): void {
+    const borderThickness = this.pictureStyle.borderThickness ?? 2;
+    const innerPadding = borderThickness + 2;
+
+    for (const picture of pictures) {
+      const { rect } = picture;
+      const x = rect.x + innerPadding;
+      const y = rect.y + innerPadding;
+      const width = Math.max(0, rect.width - 2 * innerPadding);
+      const height = Math.max(0, rect.height - 2 * innerPadding);
+
+      // Clip path for the image area
+      const clipId = `image-clip-${picture.imageIndex}`;
+      defsParts.push(
+        `<clipPath id="${clipId}"><rect x="${x}" y="${y}" width="${width}" height="${height}"/></clipPath>`
+      );
+
+      // Vignette gradient
+      defsParts.push(
+        `<radialGradient id="vignette-${picture.imageIndex}" cx="50%" cy="50%" r="70%">` +
+          `<stop offset="0%" stop-color="transparent"/>` +
+          `<stop offset="100%" stop-color="black"/>` +
+          `</radialGradient>`
+      );
+    }
   }
 
   /**
@@ -411,11 +452,8 @@ export class Compositor {
     const skyHeight = height * 0.6;
     const groundHeight = height * 0.4;
 
-    // Clipping path for the image area
+    // Use the pre-defined clip path (defined in collectPictureDefs)
     const clipId = `image-clip-${picture.imageIndex}`;
-    parts.push(
-      `<defs><clipPath id="${clipId}"><rect x="${x}" y="${y}" width="${width}" height="${height}"/></clipPath></defs>`
-    );
     parts.push(`<g clip-path="url(#${clipId})">`);
 
     // Sky/background gradient
@@ -480,12 +518,9 @@ export class Compositor {
         break;
     }
 
-    // Add a subtle vignette effect
+    // Add a subtle vignette effect (using pre-defined gradient from collectPictureDefs)
     parts.push(
       `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="url(#vignette-${picture.imageIndex})" opacity="0.3"/>`
-    );
-    parts.push(
-      `<defs><radialGradient id="vignette-${picture.imageIndex}" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="black"/></radialGradient></defs>`
     );
 
     // Add caption text if present

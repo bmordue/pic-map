@@ -455,19 +455,24 @@ export class MapEngine {
     const clusters = [
       { startX: 0, startY: 0, endX: width * 0.3, endY: height * 0.4 },
       { startX: width * 0.4, startY: 0, endX: width * 0.8, endY: height * 0.25 },
-      { startX: 0, startY: height * 0.5, endY: height * 0.75, endX: width * 0.25 },
+      { startX: 0, startY: height * 0.5, endX: width * 0.25, endY: height * 0.75 },
       { startX: width * 0.45, startY: height * 0.4, endX: width * 0.7, endY: height * 0.6 },
       { startX: width * 0.75, startY: height * 0.55, endX: width, endY: height * 0.85 },
     ];
 
+    // Use a simple seeded pseudo-random function for deterministic output
+    let buildingIndex = 0;
     for (const cluster of clusters) {
       for (let x = cluster.startX + blockGap; x < cluster.endX - blockSize; x += blockSize + blockGap) {
         for (let y = cluster.startY + blockGap; y < cluster.endY - blockSize; y += blockSize + blockGap) {
-          // Vary building sizes slightly
-          const bWidth = blockSize * (0.6 + Math.random() * 0.4);
-          const bHeight = blockSize * (0.6 + Math.random() * 0.4);
+          // Vary building sizes using deterministic values based on position
+          const seed = (buildingIndex * 7919) % 1000; // Prime number for better distribution
+          const sizeVariation = 0.6 + (seed / 1000) * 0.4;
+          const bWidth = blockSize * sizeVariation;
+          const bHeight = blockSize * (0.6 + ((seed * 3) % 1000) / 1000 * 0.4);
 
           svgParts.push(`<rect x="${x}" y="${y}" width="${bWidth}" height="${bHeight}"/>`);
+          buildingIndex++;
         }
       }
     }
