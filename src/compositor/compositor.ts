@@ -144,6 +144,7 @@ export class Compositor {
   render(input: CompositionInput): RenderedComposition {
     const layout = this.createLayout(input);
     const svgParts: string[] = [];
+    const defsParts: string[] = [];
 
     const dpi = this.config.dpi ?? DEFAULT_DPI;
 
@@ -153,6 +154,16 @@ export class Compositor {
         `width="${layout.pageDimensions.width}" height="${layout.pageDimensions.height}" ` +
         `viewBox="0 0 ${layout.pageDimensions.width} ${layout.pageDimensions.height}">`
     );
+
+    // Collect defs for pictures (clip paths and gradients)
+    this.collectPictureDefs(layout.pictures, defsParts);
+
+    // Add collected defs
+    if (defsParts.length > 0) {
+      svgParts.push('<defs>');
+      svgParts.push(...defsParts);
+      svgParts.push('</defs>');
+    }
 
     // Background
     svgParts.push(
@@ -195,6 +206,36 @@ export class Compositor {
       dpi,
       pageSizeMm,
     };
+  }
+
+  /**
+   * Collects SVG defs for all pictures (clip paths and gradients)
+   */
+  private collectPictureDefs(pictures: PositionedPicture[], defsParts: string[]): void {
+    const borderThickness = this.pictureStyle.borderThickness ?? 2;
+    const innerPadding = borderThickness + 2;
+
+    for (const picture of pictures) {
+      const { rect } = picture;
+      const x = rect.x + innerPadding;
+      const y = rect.y + innerPadding;
+      const width = Math.max(0, rect.width - 2 * innerPadding);
+      const height = Math.max(0, rect.height - 2 * innerPadding);
+
+      // Clip path for the image area
+      const clipId = `image-clip-${picture.imageIndex}`;
+      defsParts.push(
+        `<clipPath id="${clipId}"><rect x="${x}" y="${y}" width="${width}" height="${height}"/></clipPath>`
+      );
+
+      // Vignette gradient
+      defsParts.push(
+        `<radialGradient id="vignette-${picture.imageIndex}" cx="50%" cy="50%" r="70%">` +
+          `<stop offset="0%" stop-color="transparent"/>` +
+          `<stop offset="100%" stop-color="black"/>` +
+          `</radialGradient>`
+      );
+    }
   }
 
   /**
@@ -365,21 +406,134 @@ export class Compositor {
           `rx="${cornerRadius}" ry="${cornerRadius}"/>`
       );
 
-      // Placeholder for image (in a real implementation, this would embed or reference the image)
-      // For now, we show a placeholder with the image path
-      const placeholderColor = '#e0e0e0';
+      // Render a stylized placeholder image that looks like a photograph
       const innerPadding = borderThickness + 2;
-      parts.push(
-        `<rect x="${rect.x + innerPadding}" y="${rect.y + innerPadding}" ` +
-          `width="${Math.max(0, rect.width - 2 * innerPadding)}" ` +
-          `height="${Math.max(0, rect.height - 2 * innerPadding)}" ` +
-          `fill="${placeholderColor}"/>`
-      );
+      const innerX = rect.x + innerPadding;
+      const innerY = rect.y + innerPadding;
+      const innerWidth = Math.max(0, rect.width - 2 * innerPadding);
+      const innerHeight = Math.max(0, rect.height - 2 * innerPadding);
+
+      parts.push(this.renderImagePlaceholder(innerX, innerY, innerWidth, innerHeight, picture));
 
       // Add image path as title for accessibility
       parts.push(`<title>${escapeXml(picture.image.filePath)}</title>`);
 
       parts.push('</g>');
+    }
+
+    parts.push('</g>');
+
+    return parts.join('\n');
+  }
+
+  /**
+   * Renders a stylized placeholder image that simulates a photograph
+   */
+  private renderImagePlaceholder(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    picture: PositionedPicture
+  ): string {
+    const parts: string[] = [];
+
+    // Use the image index to generate different placeholder styles
+    const colorSchemes = [
+      { sky: '#87CEEB', ground: '#90EE90', accent: '#FFD700' }, // Blue sky, green landscape, gold accent
+      { sky: '#4682B4', ground: '#708090', accent: '#CD853F' }, // Steel blue sky, slate ground
+      { sky: '#FF6B6B', ground: '#4ECDC4', accent: '#FFE66D' }, // Sunset colors
+      { sky: '#2C3E50', ground: '#34495E', accent: '#E74C3C' }, // Dark urban
+      { sky: '#E8D5B7', ground: '#8B7355', accent: '#F5DEB3' }, // Sepia/vintage
+      { sky: '#6B5B95', ground: '#88B04B', accent: '#F7CAC9' }, // Purple dusk
+    ];
+
+    const scheme = colorSchemes[picture.imageIndex % colorSchemes.length];
+    const skyHeight = height * 0.6;
+    const groundHeight = height * 0.4;
+
+    // Use the pre-defined clip path (defined in collectPictureDefs)
+    const clipId = `image-clip-${picture.imageIndex}`;
+    parts.push(`<g clip-path="url(#${clipId})">`);
+
+    // Sky/background gradient
+    parts.push(`<rect x="${x}" y="${y}" width="${width}" height="${skyHeight}" fill="${scheme.sky}"/>`);
+
+    // Ground/foreground
+    parts.push(
+      `<rect x="${x}" y="${y + skyHeight}" width="${width}" height="${groundHeight}" fill="${scheme.ground}"/>`
+    );
+
+    // Add some decorative elements based on the image type
+    const centerX = x + width / 2;
+
+    // Sun or moon
+    parts.push(
+      `<circle cx="${x + width * 0.8}" cy="${y + height * 0.25}" r="${Math.min(width, height) * 0.08}" fill="${scheme.accent}" opacity="0.9"/>`
+    );
+
+    // Simple silhouette (building, mountain, or landmark shape based on index)
+    const silhouetteY = y + skyHeight;
+    const silhouetteHeight = groundHeight * 0.8;
+
+    switch (picture.imageIndex % 4) {
+      case 0:
+        // Tower/building silhouette (like Big Ben)
+        parts.push(
+          `<rect x="${centerX - 8}" y="${silhouetteY - silhouetteHeight}" width="16" height="${silhouetteHeight}" fill="rgba(0,0,0,0.3)"/>`
+        );
+        parts.push(
+          `<polygon points="${centerX},${silhouetteY - silhouetteHeight - 15} ${centerX - 5},${silhouetteY - silhouetteHeight} ${centerX + 5},${silhouetteY - silhouetteHeight}" fill="rgba(0,0,0,0.3)"/>`
+        );
+        break;
+      case 1:
+        // Bridge silhouette
+        parts.push(
+          `<path d="M ${x} ${silhouetteY} Q ${centerX} ${silhouetteY - silhouetteHeight * 0.7} ${x + width} ${silhouetteY}" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="4"/>`
+        );
+        parts.push(
+          `<rect x="${centerX - 5}" y="${silhouetteY - silhouetteHeight}" width="10" height="${silhouetteHeight}" fill="rgba(0,0,0,0.3)"/>`
+        );
+        parts.push(
+          `<rect x="${centerX + 25}" y="${silhouetteY - silhouetteHeight}" width="10" height="${silhouetteHeight}" fill="rgba(0,0,0,0.3)"/>`
+        );
+        break;
+      case 2: {
+        // Ferris wheel silhouette (like London Eye)
+        const wheelRadius = Math.min(width, height) * 0.25;
+        parts.push(
+          `<circle cx="${centerX}" cy="${silhouetteY - wheelRadius}" r="${wheelRadius}" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="3"/>`
+        );
+        parts.push(
+          `<line x1="${centerX}" y1="${silhouetteY}" x2="${centerX}" y2="${silhouetteY - wheelRadius * 2}" stroke="rgba(0,0,0,0.3)" stroke-width="2"/>`
+        );
+        break;
+      }
+      case 3:
+      default:
+        // Mountain/landscape silhouette
+        parts.push(
+          `<polygon points="${x},${silhouetteY} ${centerX - 30},${silhouetteY - silhouetteHeight * 0.5} ${centerX},${silhouetteY - silhouetteHeight} ${centerX + 30},${silhouetteY - silhouetteHeight * 0.6} ${x + width},${silhouetteY}" fill="rgba(0,0,0,0.2)"/>`
+        );
+        break;
+    }
+
+    // Add a subtle vignette effect (using pre-defined gradient from collectPictureDefs)
+    parts.push(
+      `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="url(#vignette-${picture.imageIndex})" opacity="0.3"/>`
+    );
+
+    // Add caption text if present
+    if (picture.image.caption) {
+      const captionY = y + height - 8;
+      const captionX = x + 5;
+      // Background for caption
+      parts.push(
+        `<rect x="${captionX - 2}" y="${captionY - 10}" width="${width - 6}" height="14" fill="rgba(0,0,0,0.5)" rx="2"/>`
+      );
+      parts.push(
+        `<text x="${captionX}" y="${captionY}" font-family="Arial, sans-serif" font-size="9" fill="white">${escapeXml(picture.image.caption.substring(0, 30))}</text>`
+      );
     }
 
     parts.push('</g>');
