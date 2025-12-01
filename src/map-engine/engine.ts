@@ -19,6 +19,8 @@ export interface MapRenderConfig {
   markers?: MapMarker[];
   /** Background color for the map */
   backgroundColor?: string;
+  /** Whether to render detailed map features (roads, buildings, etc.) */
+  showMapFeatures?: boolean;
 }
 
 /**
@@ -275,6 +277,7 @@ export class MapEngine {
   renderMap(config: MapRenderConfig): RenderedMap {
     const { style, width, height, markers = [] } = config;
     const backgroundColor = sanitizeColor(config.backgroundColor, '#f0f0f0');
+    const showMapFeatures = config.showMapFeatures !== false; // Default to true
 
     // Calculate bounds
     const bounds = calculateBounds(style.center, style.zoom, width, height);
@@ -290,13 +293,16 @@ export class MapEngine {
     // Background
     svgParts.push(`<rect width="${width}" height="${height}" fill="${backgroundColor}"/>`);
 
-    // Add map tiles placeholder (for now, just a background with border)
-    svgParts.push(
-      `<rect width="${width}" height="${height}" fill="#e8e8e8" stroke="#cccccc" stroke-width="1"/>`
-    );
-
-    // Add grid lines to simulate map tiles
-    this.addGridLines(svgParts, width, height);
+    if (showMapFeatures) {
+      // Add detailed map features
+      this.addMapFeatures(svgParts, width, height, style);
+    } else {
+      // Legacy mode: simple grid placeholder
+      svgParts.push(
+        `<rect width="${width}" height="${height}" fill="#e8e8e8" stroke="#cccccc" stroke-width="1"/>`
+      );
+      this.addGridLines(svgParts, width, height);
+    }
 
     // Render markers
     if (markers.length > 0) {
@@ -329,6 +335,195 @@ export class MapEngine {
       height,
       bounds,
     };
+  }
+
+  /**
+   * Adds detailed map features including water, parks, buildings, and roads
+   */
+  private addMapFeatures(
+    svgParts: string[],
+    width: number,
+    height: number,
+    style: MapStyle
+  ): void {
+    // Land background
+    svgParts.push(`<rect width="${width}" height="${height}" fill="#f5f5dc"/>`);
+
+    // Water features (rivers, lakes) - procedurally generated based on bounds
+    svgParts.push('<g id="water" fill="#a8d5e5" stroke="#8bc4d8" stroke-width="0.5">');
+    this.addWaterFeatures(svgParts, width, height, style.center);
+    svgParts.push('</g>');
+
+    // Parks and green spaces
+    svgParts.push('<g id="parks" fill="#c8e6c9" stroke="#a5d6a7" stroke-width="0.5">');
+    this.addParkFeatures(svgParts, width, height);
+    svgParts.push('</g>');
+
+    // Building blocks
+    svgParts.push('<g id="buildings" fill="#e0e0e0" stroke="#bdbdbd" stroke-width="0.3">');
+    this.addBuildingFeatures(svgParts, width, height);
+    svgParts.push('</g>');
+
+    // Roads
+    svgParts.push('<g id="roads">');
+    this.addRoadFeatures(svgParts, width, height);
+    svgParts.push('</g>');
+  }
+
+  /**
+   * Adds water features (rivers and water bodies)
+   */
+  private addWaterFeatures(
+    svgParts: string[],
+    width: number,
+    height: number,
+    center: GeoLocation
+  ): void {
+    // Generate a river-like feature based on the map center
+    // Use the center's coordinates to seed a deterministic "random" curve
+    const seed = Math.abs(center.latitude + center.longitude);
+    const riverY = height * (0.3 + (seed % 4) * 0.1);
+    const riverWidth = 15 + (seed % 10);
+
+    // Main river path (sinusoidal curve across the map)
+    const points: string[] = [];
+    for (let x = 0; x <= width; x += 20) {
+      const yOffset = Math.sin((x / width) * Math.PI * 2 + seed) * 30;
+      points.push(`${x},${riverY + yOffset}`);
+    }
+
+    // Create river as a thick path
+    svgParts.push(
+      `<path d="M ${points.join(' L ')}" fill="none" stroke="#a8d5e5" stroke-width="${riverWidth}" stroke-linecap="round" stroke-linejoin="round"/>`
+    );
+
+    // Add a smaller tributary
+    const tributaryStartX = width * (0.2 + (seed % 3) * 0.2);
+    const tributaryY = riverY + Math.sin(seed) * 30;
+    svgParts.push(
+      `<path d="M ${tributaryStartX},0 Q ${tributaryStartX + 30},${tributaryY / 2} ${tributaryStartX + 10},${tributaryY}" ` +
+        `fill="none" stroke="#a8d5e5" stroke-width="${riverWidth * 0.5}" stroke-linecap="round"/>`
+    );
+
+    // Add a small lake/pond
+    const lakeX = width * 0.7;
+    const lakeY = height * 0.2;
+    svgParts.push(
+      `<ellipse cx="${lakeX}" cy="${lakeY}" rx="35" ry="20" fill="#a8d5e5" stroke="#8bc4d8"/>`
+    );
+  }
+
+  /**
+   * Adds park and green space features
+   */
+  private addParkFeatures(svgParts: string[], width: number, height: number): void {
+
+    // Add several park areas
+    const parkLocations = [
+      { x: width * 0.15, y: height * 0.25, w: 60, h: 40 },
+      { x: width * 0.6, y: height * 0.65, w: 80, h: 50 },
+      { x: width * 0.85, y: height * 0.4, w: 50, h: 35 },
+      { x: width * 0.35, y: height * 0.8, w: 70, h: 30 },
+    ];
+
+    for (let i = 0; i < parkLocations.length; i++) {
+      const park = parkLocations[i];
+      // Rounded rectangle for parks
+      svgParts.push(
+        `<rect x="${park.x}" y="${park.y}" width="${park.w}" height="${park.h}" rx="8" ry="8"/>`
+      );
+
+      // Add some tree symbols (small circles) inside parks
+      const numTrees = 3 + (i % 3);
+      for (let t = 0; t < numTrees; t++) {
+        const treeX = park.x + 10 + ((park.w - 20) * t) / numTrees;
+        const treeY = park.y + park.h / 2 + ((t % 2) - 0.5) * 10;
+        svgParts.push(`<circle cx="${treeX}" cy="${treeY}" r="4" fill="#81c784" stroke="#4caf50"/>`);
+      }
+    }
+  }
+
+  /**
+   * Adds building features (simplified building blocks)
+   */
+  private addBuildingFeatures(svgParts: string[], width: number, height: number): void {
+    // Create a grid of building blocks, avoiding water and park areas
+    const blockSize = 25;
+    const blockGap = 8;
+
+    // Generate building clusters in different areas
+    const clusters = [
+      { startX: 0, startY: 0, endX: width * 0.3, endY: height * 0.4 },
+      { startX: width * 0.4, startY: 0, endX: width * 0.8, endY: height * 0.25 },
+      { startX: 0, startY: height * 0.5, endY: height * 0.75, endX: width * 0.25 },
+      { startX: width * 0.45, startY: height * 0.4, endX: width * 0.7, endY: height * 0.6 },
+      { startX: width * 0.75, startY: height * 0.55, endX: width, endY: height * 0.85 },
+    ];
+
+    for (const cluster of clusters) {
+      for (let x = cluster.startX + blockGap; x < cluster.endX - blockSize; x += blockSize + blockGap) {
+        for (let y = cluster.startY + blockGap; y < cluster.endY - blockSize; y += blockSize + blockGap) {
+          // Vary building sizes slightly
+          const bWidth = blockSize * (0.6 + Math.random() * 0.4);
+          const bHeight = blockSize * (0.6 + Math.random() * 0.4);
+
+          svgParts.push(`<rect x="${x}" y="${y}" width="${bWidth}" height="${bHeight}"/>`);
+        }
+      }
+    }
+  }
+
+  /**
+   * Adds road features (major and minor roads)
+   */
+  private addRoadFeatures(svgParts: string[], width: number, height: number): void {
+    // Major roads (wider, darker)
+    svgParts.push('<g id="major-roads" stroke="#ffd54f" stroke-width="6" stroke-linecap="round">');
+
+    // Horizontal major roads
+    svgParts.push(`<line x1="0" y1="${height * 0.35}" x2="${width}" y2="${height * 0.35}"/>`);
+    svgParts.push(`<line x1="0" y1="${height * 0.7}" x2="${width}" y2="${height * 0.7}"/>`);
+
+    // Vertical major roads
+    svgParts.push(`<line x1="${width * 0.3}" y1="0" x2="${width * 0.3}" y2="${height}"/>`);
+    svgParts.push(`<line x1="${width * 0.65}" y1="0" x2="${width * 0.65}" y2="${height}"/>`);
+
+    // Diagonal road
+    svgParts.push(`<line x1="0" y1="${height}" x2="${width * 0.5}" y2="0"/>`);
+
+    svgParts.push('</g>');
+
+    // Add road centerlines for major roads
+    svgParts.push('<g id="major-road-lines" stroke="#fff59d" stroke-width="1" stroke-dasharray="10,6">');
+    svgParts.push(`<line x1="0" y1="${height * 0.35}" x2="${width}" y2="${height * 0.35}"/>`);
+    svgParts.push(`<line x1="0" y1="${height * 0.7}" x2="${width}" y2="${height * 0.7}"/>`);
+    svgParts.push(`<line x1="${width * 0.3}" y1="0" x2="${width * 0.3}" y2="${height}"/>`);
+    svgParts.push(`<line x1="${width * 0.65}" y1="0" x2="${width * 0.65}" y2="${height}"/>`);
+    svgParts.push('</g>');
+
+    // Minor roads (narrower, lighter)
+    svgParts.push('<g id="minor-roads" stroke="#ffffff" stroke-width="3" stroke-linecap="round">');
+
+    // Grid of minor roads
+    const gridSpacing = 60;
+    for (let x = gridSpacing; x < width; x += gridSpacing) {
+      svgParts.push(`<line x1="${x}" y1="0" x2="${x}" y2="${height}"/>`);
+    }
+    for (let y = gridSpacing; y < height; y += gridSpacing) {
+      svgParts.push(`<line x1="0" y1="${y}" x2="${width}" y2="${y}"/>`);
+    }
+
+    svgParts.push('</g>');
+
+    // Road borders for depth
+    svgParts.push('<g id="road-borders" stroke="#9e9e9e" stroke-width="0.5" fill="none">');
+    svgParts.push(
+      `<line x1="0" y1="${height * 0.35 - 3}" x2="${width}" y2="${height * 0.35 - 3}"/>`
+    );
+    svgParts.push(
+      `<line x1="0" y1="${height * 0.35 + 3}" x2="${width}" y2="${height * 0.35 + 3}"/>`
+    );
+    svgParts.push('</g>');
   }
 
   /**
