@@ -276,8 +276,12 @@ describe('End-to-End Integration Tests', () => {
         markers: MapEngine.createMarkersFromLinks(config.links),
       });
 
-      // Export to SVG
+      // Export to SVG - use explicit page size since export engine doesn't support 'custom' string
       const exportEngine = new ExportEngine();
+      const pageSize =
+        config.layout.pageSize === 'custom' && config.layout.customDimensions
+          ? config.layout.customDimensions
+          : (config.layout.pageSize as 'A4' | 'Letter' | 'A3' | 'Legal');
       const exportResult = exportEngine.exportToSvg(
         {
           svg: mapResult.svg,
@@ -285,7 +289,7 @@ describe('End-to-End Integration Tests', () => {
           height: mapResult.height,
         },
         {
-          pageSize: config.layout.pageSize,
+          pageSize,
           orientation: config.layout.orientation,
           title: config.title,
           author: 'Pic-Map E2E Test',
@@ -313,8 +317,12 @@ describe('End-to-End Integration Tests', () => {
         markers: MapEngine.createMarkersFromLinks(config.links),
       });
 
-      // Export to PDF
+      // Export to PDF - use explicit page size since export engine doesn't support 'custom' string
       const exportEngine = new ExportEngine();
+      const pageSize =
+        config.layout.pageSize === 'custom' && config.layout.customDimensions
+          ? config.layout.customDimensions
+          : (config.layout.pageSize as 'A4' | 'Letter' | 'A3' | 'Legal');
       const exportResult = await exportEngine.exportToPdf(
         {
           svg: mapResult.svg,
@@ -322,7 +330,7 @@ describe('End-to-End Integration Tests', () => {
           height: mapResult.height,
         },
         {
-          pageSize: config.layout.pageSize,
+          pageSize,
           orientation: config.layout.orientation,
           title: config.title,
           author: 'Pic-Map E2E Test',
