@@ -394,7 +394,12 @@ describe('End-to-End Integration Tests', () => {
         linkStyle: { type: 'both', lineColor: '#e74c3c', lineWidth: 2, lineStyle: 'dashed' },
       };
 
-      const compositor = createCompositorFromLayout(config.layout, config.pictureBorder, config.linkStyle, 72);
+      const compositor = createCompositorFromLayout(
+        config.layout,
+        config.pictureBorder,
+        config.linkStyle,
+        72
+      );
       const layout = compositor.createLayout({
         map: { svg: '', width: 0, height: 0, bounds: { north: 0, south: 0, east: 0, west: 0 } },
         images: config.images,
@@ -432,7 +437,7 @@ describe('End-to-End Integration Tests', () => {
         map: {
           provider: 'openstreetmap',
           zoom: 16,
-          center: { latitude: 40.7580, longitude: -73.9855 },
+          center: { latitude: 40.758, longitude: -73.9855 },
           showScale: true,
           showAttribution: true,
         },
@@ -444,7 +449,7 @@ describe('End-to-End Integration Tests', () => {
         ],
         links: [
           { imageId: '0', location: { latitude: 40.7585, longitude: -73.9852 }, label: 'A' },
-          { imageId: '1', location: { latitude: 40.7578, longitude: -73.9860 }, label: 'B' },
+          { imageId: '1', location: { latitude: 40.7578, longitude: -73.986 }, label: 'B' },
           { imageId: '2', location: { latitude: 40.7575, longitude: -73.9848 }, label: 'C' },
           { imageId: '3', location: { latitude: 40.7582, longitude: -73.9862 }, label: 'D' },
         ],
@@ -479,7 +484,13 @@ describe('End-to-End Integration Tests', () => {
           zoom: 18,
           center: { latitude: 51.5014, longitude: -0.1419 },
         },
-        images: [{ filePath: '/my-photo.jpg', caption: 'Where we met', dimensions: { width: 4000, height: 3000 } }],
+        images: [
+          {
+            filePath: '/my-photo.jpg',
+            caption: 'Where we met',
+            dimensions: { width: 4000, height: 3000 },
+          },
+        ],
         links: [{ imageId: '0', location: { latitude: 51.5014, longitude: -0.1419 }, label: '♥' }],
         linkStyle: { type: 'both', lineColor: '#ff1493' },
       };
@@ -491,7 +502,12 @@ describe('End-to-End Integration Tests', () => {
         label: l.label,
       }));
 
-      const compositor = createCompositorFromLayout(config.layout, config.pictureBorder, config.linkStyle, 150);
+      const compositor = createCompositorFromLayout(
+        config.layout,
+        config.pictureBorder,
+        config.linkStyle,
+        150
+      );
       const layout = compositor.createLayout({
         map: { svg: '', width: 0, height: 0, bounds: { north: 0, south: 0, east: 0, west: 0 } },
         images: config.images,
@@ -702,7 +718,9 @@ describe('Print Output Validation', () => {
         const color = match.match(/"([^"]*)"/)?.[1];
         if (color && color !== 'none') {
           // Should be a hex color, named color, or rgb/rgba value
-          expect(color).toMatch(/^(#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|[a-zA-Z]+|rgb\([^)]+\)|rgba\([^)]+\))$/);
+          expect(color).toMatch(
+            /^(#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|[a-zA-Z]+|rgb\([^)]+\)|rgba\([^)]+\))$/
+          );
         }
       }
     });
