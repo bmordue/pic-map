@@ -167,6 +167,34 @@ describe('calculateZoomToFit', () => {
     expect(zoom).toBeGreaterThanOrEqual(0);
     expect(zoom).toBeLessThanOrEqual(20);
   });
+
+  it('should handle locations spanning large latitude range with Mercator distortion', () => {
+    // Test with locations from near equator to northern latitudes
+    // The Mercator projection distorts distances at higher latitudes
+    const locations: GeoLocation[] = [
+      { latitude: 0, longitude: 0 }, // Equator
+      { latitude: 60, longitude: 0 }, // Northern latitude (significant Mercator distortion)
+    ];
+    const width = 800;
+    const height = 600;
+
+    const zoom = calculateZoomToFit(locations, width, height);
+
+    // Verify that the zoom level is valid and reasonable
+    expect(zoom).toBeGreaterThanOrEqual(0);
+    expect(zoom).toBeLessThanOrEqual(20);
+
+    // Verify that all markers fit within the viewport at the calculated zoom level
+    const center = calculateCenter(locations);
+    locations.forEach((location) => {
+      const pixel = geoToViewportPixel(location, center, zoom, width, height);
+      // With padding, markers should be within the viewport bounds
+      expect(pixel.x).toBeGreaterThanOrEqual(0);
+      expect(pixel.x).toBeLessThanOrEqual(width);
+      expect(pixel.y).toBeGreaterThanOrEqual(0);
+      expect(pixel.y).toBeLessThanOrEqual(height);
+    });
+  });
 });
 
 describe('calculateCenter', () => {
