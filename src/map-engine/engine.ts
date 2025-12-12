@@ -340,12 +340,7 @@ export class MapEngine {
   /**
    * Adds detailed map features including water, parks, buildings, and roads
    */
-  private addMapFeatures(
-    svgParts: string[],
-    width: number,
-    height: number,
-    style: MapStyle
-  ): void {
+  private addMapFeatures(svgParts: string[], width: number, height: number, style: MapStyle): void {
     // Land background
     svgParts.push(`<rect width="${width}" height="${height}" fill="#f5f5dc"/>`);
 
@@ -417,7 +412,6 @@ export class MapEngine {
    * Adds park and green space features
    */
   private addParkFeatures(svgParts: string[], width: number, height: number): void {
-
     // Add several park areas
     const parkLocations = [
       { x: width * 0.15, y: height * 0.25, w: 60, h: 40 },
@@ -438,7 +432,9 @@ export class MapEngine {
       for (let t = 0; t < numTrees; t++) {
         const treeX = park.x + 10 + ((park.w - 20) * t) / numTrees;
         const treeY = park.y + park.h / 2 + ((t % 2) - 0.5) * 10;
-        svgParts.push(`<circle cx="${treeX}" cy="${treeY}" r="4" fill="#81c784" stroke="#4caf50"/>`);
+        svgParts.push(
+          `<circle cx="${treeX}" cy="${treeY}" r="4" fill="#81c784" stroke="#4caf50"/>`
+        );
       }
     }
   }
@@ -463,13 +459,21 @@ export class MapEngine {
     // Use a simple seeded pseudo-random function for deterministic output
     let buildingIndex = 0;
     for (const cluster of clusters) {
-      for (let x = cluster.startX + blockGap; x < cluster.endX - blockSize; x += blockSize + blockGap) {
-        for (let y = cluster.startY + blockGap; y < cluster.endY - blockSize; y += blockSize + blockGap) {
+      for (
+        let x = cluster.startX + blockGap;
+        x < cluster.endX - blockSize;
+        x += blockSize + blockGap
+      ) {
+        for (
+          let y = cluster.startY + blockGap;
+          y < cluster.endY - blockSize;
+          y += blockSize + blockGap
+        ) {
           // Vary building sizes using deterministic values based on position
           const seed = (buildingIndex * 7919) % 1000; // Prime number for better distribution
           const sizeVariation = 0.6 + (seed / 1000) * 0.4;
           const bWidth = blockSize * sizeVariation;
-          const bHeight = blockSize * (0.6 + ((seed * 3) % 1000) / 1000 * 0.4);
+          const bHeight = blockSize * (0.6 + (((seed * 3) % 1000) / 1000) * 0.4);
 
           svgParts.push(`<rect x="${x}" y="${y}" width="${bWidth}" height="${bHeight}"/>`);
           buildingIndex++;
@@ -499,7 +503,9 @@ export class MapEngine {
     svgParts.push('</g>');
 
     // Add road centerlines for major roads
-    svgParts.push('<g id="major-road-lines" stroke="#fff59d" stroke-width="1" stroke-dasharray="10,6">');
+    svgParts.push(
+      '<g id="major-road-lines" stroke="#fff59d" stroke-width="1" stroke-dasharray="10,6">'
+    );
     svgParts.push(`<line x1="0" y1="${height * 0.35}" x2="${width}" y2="${height * 0.35}"/>`);
     svgParts.push(`<line x1="0" y1="${height * 0.7}" x2="${width}" y2="${height * 0.7}"/>`);
     svgParts.push(`<line x1="${width * 0.3}" y1="0" x2="${width * 0.3}" y2="${height}"/>`);

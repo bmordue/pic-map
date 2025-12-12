@@ -457,7 +457,9 @@ export class Compositor {
     parts.push(`<g clip-path="url(#${clipId})">`);
 
     // Sky/background gradient
-    parts.push(`<rect x="${x}" y="${y}" width="${width}" height="${skyHeight}" fill="${scheme.sky}"/>`);
+    parts.push(
+      `<rect x="${x}" y="${y}" width="${width}" height="${skyHeight}" fill="${scheme.sky}"/>`
+    );
 
     // Ground/foreground
     parts.push(
