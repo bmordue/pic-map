@@ -3,6 +3,8 @@
 A TypeScript-based tool for creating maps with picture borders - perfect for travel documentation, business directories, and visual storytelling.
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/bmordue/pic-map)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bmordue_pic-map&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bmordue_pic-map)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=bmordue_pic-map&metric=coverage)](https://sonarcloud.io/summary/new_code?id=bmordue_pic-map)
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-18.x+-green.svg)](https://nodejs.org/)
@@ -468,6 +470,40 @@ The project uses [Vitest](https://vitest.dev/) for testing with 272+ tests acros
 - **Linting**: ESLint with TypeScript rules
 - **Formatting**: Prettier
 - **Conventions**: Follows standard TypeScript best practices
+
+### Code Quality & Static Analysis
+
+This project uses [SonarCloud](https://sonarcloud.io) for continuous code quality monitoring and static analysis.
+
+#### Setting Up SonarCloud (For Maintainers)
+
+1. **Create SonarCloud Account**
+   - Go to [sonarcloud.io](https://sonarcloud.io) and sign in with your GitHub account
+   - Click "My Account" → "Security" → "Tokens" and generate a new token
+
+2. **Configure GitHub Secret**
+   - In your GitHub repository, go to Settings → Secrets and variables → Actions
+   - Add a new secret named `SONAR_TOKEN` with the token generated in Step 1
+
+3. **SonarCloud Analysis**
+   - The analysis runs automatically on every push and pull request via GitHub Actions
+   - View results at [https://sonarcloud.io/dashboard?id=bmordue_pic-map](https://sonarcloud.io/dashboard?id=bmordue_pic-map)
+   - Quality gates ensure code meets defined standards before merging
+
+#### Configuration Files
+
+- `sonar-project.properties` - SonarCloud configuration with project settings
+- `.github/workflows/ci.yml` - CI pipeline includes SonarCloud analysis
+- `vitest.config.ts` - Configured to generate LCOV coverage reports for SonarCloud
+
+#### Quality Metrics Tracked
+
+- **Code Coverage**: Test coverage percentage
+- **Code Smells**: Maintainability issues
+- **Bugs**: Reliability issues
+- **Security Vulnerabilities**: Security hotspots and vulnerabilities
+- **Duplications**: Code duplication percentage
+- **Technical Debt**: Estimated time to fix all issues
 
 ## Development Status
 
