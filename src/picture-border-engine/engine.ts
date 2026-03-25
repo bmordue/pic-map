@@ -266,8 +266,13 @@ export class PictureBorderEngine {
   ): void {
     const x = pic.slot.x + pic.offsetX;
     const y = pic.slot.y + pic.offsetY;
+    const pictureTitle =
+      pic.image.altText || pic.image.caption || `Picture from ${pic.image.filePath}`;
 
-    parts.push(`<g class="picture-frame" data-slot="${pic.slot.id}">`);
+    parts.push(
+      `<g class="picture-frame" data-slot="${pic.slot.id}" role="img" aria-label="${this.escapeXml(pictureTitle)}">`
+    );
+    parts.push(`<title>${this.escapeXml(pictureTitle)}</title>`);
 
     // Background rectangle
     parts.push(

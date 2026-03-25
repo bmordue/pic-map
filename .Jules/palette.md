@@ -1,0 +1,3 @@
+## 2025-05-15 - [SVG Accessibility for Maps]
+**Learning:** For complex SVG compositions like maps, root metadata (title, desc, role="img", aria-label) is essential for screen readers to identify the overall purpose. Individual interactive elements (markers, picture frames) should have their own accessible names using titles and ARIA roles (graphics-symbol, img) to provide context for what they represent.
+**Action:** Always include semantic metadata and ARIA roles in SVG rendering logic, prioritizing descriptive fields like altText, caption, or location names over technical details like file paths.

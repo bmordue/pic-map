@@ -145,6 +145,10 @@ export interface RenderedComposition {
  * Configuration for the compositor
  */
 export interface CompositorConfig {
+  /** Title of the composition */
+  title?: string;
+  /** Description of the composition */
+  description?: string;
   /** Page size identifier */
   pageSize: PageSizeId;
   /** Custom dimensions (required if pageSize is 'custom') */
