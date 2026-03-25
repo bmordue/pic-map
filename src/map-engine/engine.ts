@@ -287,7 +287,11 @@ export class MapEngine {
 
     // SVG header
     svgParts.push(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="Map centered at ${style.center.latitude}, ${style.center.longitude}">`
+    );
+    svgParts.push(`<title>Map of ${style.center.name || 'selected area'}</title>`);
+    svgParts.push(
+      `<desc>A map showing geographic locations and markers at zoom level ${style.zoom}</desc>`
     );
 
     // Background
@@ -571,7 +575,11 @@ export class MapEngine {
     const shape = marker.style?.shape || 'pin';
 
     const parts: string[] = [];
-    parts.push(`<g class="marker" transform="translate(${pixel.x}, ${pixel.y})">`);
+    const markerTitle = marker.location.name || marker.label || 'Map marker';
+    parts.push(
+      `<g class="marker" transform="translate(${pixel.x}, ${pixel.y})" role="graphics-symbol" aria-label="${this.escapeXml(markerTitle)}">`
+    );
+    parts.push(`<title>${this.escapeXml(markerTitle)}</title>`);
 
     switch (shape) {
       case 'circle':

@@ -37,7 +37,9 @@ async function renderMapExample(configPath?: string): Promise<void> {
       config.layout,
       config.pictureBorder,
       config.linkStyle,
-      dpi
+      dpi,
+      config.title,
+      config.description
     );
 
     // Get the layout to determine map area dimensions

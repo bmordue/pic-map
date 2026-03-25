@@ -149,11 +149,17 @@ export class Compositor {
     const dpi = this.config.dpi ?? DEFAULT_DPI;
 
     // SVG header
+    const title = this.config.title || 'Pic-Map Composition';
     svgParts.push(
       `<svg xmlns="http://www.w3.org/2000/svg" ` +
         `width="${layout.pageDimensions.width}" height="${layout.pageDimensions.height}" ` +
-        `viewBox="0 0 ${layout.pageDimensions.width} ${layout.pageDimensions.height}">`
+        `viewBox="0 0 ${layout.pageDimensions.width} ${layout.pageDimensions.height}" ` +
+        `role="img" aria-label="${escapeXml(title)}">`
     );
+    svgParts.push(`<title>${escapeXml(title)}</title>`);
+    if (this.config.description) {
+      svgParts.push(`<desc>${escapeXml(this.config.description)}</desc>`);
+    }
 
     // Collect defs for pictures (clip paths and gradients)
     this.collectPictureDefs(layout.pictures, defsParts);
@@ -415,8 +421,12 @@ export class Compositor {
 
       parts.push(this.renderImagePlaceholder(innerX, innerY, innerWidth, innerHeight, picture));
 
-      // Add image path as title for accessibility
-      parts.push(`<title>${escapeXml(picture.image.filePath)}</title>`);
+      // Add title for accessibility
+      const pictureTitle =
+        picture.image.altText || picture.image.caption || `Picture from ${picture.image.filePath}`;
+      parts.push(
+        `<g role="img" aria-label="${escapeXml(pictureTitle)}"><title>${escapeXml(pictureTitle)}</title></g>`
+      );
 
       parts.push('</g>');
     }
@@ -626,9 +636,13 @@ export function createCompositorFromLayout(
   },
   pictureBorder?: PictureBorderStyle,
   linkStyle?: LinkStyle,
-  dpi?: number
+  dpi?: number,
+  title?: string,
+  description?: string
 ): Compositor {
   return new Compositor({
+    title,
+    description,
     pageSize: layout.pageSize,
     customDimensions: layout.customDimensions,
     orientation: layout.orientation,
