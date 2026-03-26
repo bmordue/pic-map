@@ -402,8 +402,13 @@ export class Compositor {
 
     for (const picture of pictures) {
       const { rect } = picture;
+      const pictureTitle =
+        picture.image.altText || picture.image.caption || `Picture from ${picture.image.filePath}`;
 
-      parts.push(`<g class="picture" data-index="${picture.imageIndex}">`);
+      parts.push(
+        `<g class="picture" data-index="${picture.imageIndex}" role="graphics-symbol" aria-label="${escapeXml(pictureTitle)}">`
+      );
+      parts.push(`<title>${escapeXml(pictureTitle)}</title>`);
 
       // Picture frame background
       parts.push(
@@ -420,13 +425,6 @@ export class Compositor {
       const innerHeight = Math.max(0, rect.height - 2 * innerPadding);
 
       parts.push(this.renderImagePlaceholder(innerX, innerY, innerWidth, innerHeight, picture));
-
-      // Add title for accessibility
-      const pictureTitle =
-        picture.image.altText || picture.image.caption || `Picture from ${picture.image.filePath}`;
-      parts.push(
-        `<g role="img" aria-label="${escapeXml(pictureTitle)}"><title>${escapeXml(pictureTitle)}</title></g>`
-      );
 
       parts.push('</g>');
     }
