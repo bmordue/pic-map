@@ -44,7 +44,9 @@ describe('MapEngine Accessibility', () => {
     });
 
     expect(result.svg).toContain('role="graphics-symbol"');
-    expect(result.svg).toContain('aria-label="Big Ben"');
-    expect(result.svg).toContain('<title>Big Ben</title>');
+    expect(result.svg).toContain('aria-label="Big Ben (marker A)"');
+    expect(result.svg).toContain('<title>Big Ben (marker A)</title>');
+    expect(result.svg).toContain('tabindex="0"');
+    expect(result.svg).toContain('aria-hidden="true"'); // For decorative features and scale
   });
 });

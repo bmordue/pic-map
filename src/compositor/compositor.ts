@@ -288,7 +288,7 @@ export class Compositor {
     const parts: string[] = [];
     const bgColor = sanitizeColor(this.pictureStyle.backgroundColor, '#ffffff');
 
-    parts.push('<g class="border-backgrounds">');
+    parts.push('<g class="border-backgrounds" aria-hidden="true">');
 
     for (const [, area] of Object.entries(layout.borderAreas)) {
       parts.push(
@@ -373,7 +373,7 @@ export class Compositor {
       strokeDasharray = ` stroke-dasharray="${lineWidth} ${lineWidth * 2}"`;
     }
 
-    parts.push('<g class="link-lines">');
+    parts.push('<g class="link-lines" aria-hidden="true">');
 
     for (const link of links) {
       parts.push(
@@ -402,11 +402,17 @@ export class Compositor {
 
     for (const picture of pictures) {
       const { rect } = picture;
-      const pictureTitle =
-        picture.image.altText || picture.image.caption || `Picture from ${picture.image.filePath}`;
+      const altText = picture.image.altText;
+      const caption = picture.image.caption;
+      const label = picture.label;
+      let pictureTitle = altText || caption || `Picture from ${picture.image.filePath}`;
+
+      if (label) {
+        pictureTitle = `${pictureTitle} (labeled ${label})`;
+      }
 
       parts.push(
-        `<g class="picture" data-index="${picture.imageIndex}" role="graphics-symbol" aria-label="${escapeXml(pictureTitle)}">`
+        `<g class="picture" data-index="${picture.imageIndex}" role="graphics-symbol" aria-label="${escapeXml(pictureTitle)}" tabindex="0">`
       );
       parts.push(`<title>${escapeXml(pictureTitle)}</title>`);
 
@@ -462,7 +468,7 @@ export class Compositor {
 
     // Use the pre-defined clip path (defined in collectPictureDefs)
     const clipId = `image-clip-${picture.imageIndex}`;
-    parts.push(`<g clip-path="url(#${clipId})">`);
+    parts.push(`<g clip-path="url(#${clipId})" aria-hidden="true">`);
 
     // Sky/background gradient
     parts.push(
@@ -561,7 +567,7 @@ export class Compositor {
     const fontSize = labelStyle?.fontSize ?? 12;
     const color = sanitizeColor(labelStyle?.color, '#333333');
 
-    parts.push('<g class="link-labels">');
+    parts.push('<g class="link-labels" aria-hidden="true">');
 
     for (const picture of pictures) {
       if (!picture.label) continue;
