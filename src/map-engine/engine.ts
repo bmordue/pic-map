@@ -349,22 +349,28 @@ export class MapEngine {
     svgParts.push(`<rect width="${width}" height="${height}" fill="#f5f5dc"/>`);
 
     // Water features (rivers, lakes) - procedurally generated based on bounds
-    svgParts.push('<g id="water" fill="#a8d5e5" stroke="#8bc4d8" stroke-width="0.5">');
+    svgParts.push(
+      '<g id="water" fill="#a8d5e5" stroke="#8bc4d8" stroke-width="0.5" aria-hidden="true">'
+    );
     this.addWaterFeatures(svgParts, width, height, style.center);
     svgParts.push('</g>');
 
     // Parks and green spaces
-    svgParts.push('<g id="parks" fill="#c8e6c9" stroke="#a5d6a7" stroke-width="0.5">');
+    svgParts.push(
+      '<g id="parks" fill="#c8e6c9" stroke="#a5d6a7" stroke-width="0.5" aria-hidden="true">'
+    );
     this.addParkFeatures(svgParts, width, height);
     svgParts.push('</g>');
 
     // Building blocks
-    svgParts.push('<g id="buildings" fill="#e0e0e0" stroke="#bdbdbd" stroke-width="0.3">');
+    svgParts.push(
+      '<g id="buildings" fill="#e0e0e0" stroke="#bdbdbd" stroke-width="0.3" aria-hidden="true">'
+    );
     this.addBuildingFeatures(svgParts, width, height);
     svgParts.push('</g>');
 
     // Roads
-    svgParts.push('<g id="roads">');
+    svgParts.push('<g id="roads" aria-hidden="true">');
     this.addRoadFeatures(svgParts, width, height);
     svgParts.push('</g>');
   }
@@ -491,7 +497,9 @@ export class MapEngine {
    */
   private addRoadFeatures(svgParts: string[], width: number, height: number): void {
     // Major roads (wider, darker)
-    svgParts.push('<g id="major-roads" stroke="#ffd54f" stroke-width="6" stroke-linecap="round">');
+    svgParts.push(
+      '<g id="major-roads" stroke="#ffd54f" stroke-width="6" stroke-linecap="round" aria-hidden="true">'
+    );
 
     // Horizontal major roads
     svgParts.push(`<line x1="0" y1="${height * 0.35}" x2="${width}" y2="${height * 0.35}"/>`);
@@ -508,7 +516,7 @@ export class MapEngine {
 
     // Add road centerlines for major roads
     svgParts.push(
-      '<g id="major-road-lines" stroke="#fff59d" stroke-width="1" stroke-dasharray="10,6">'
+      '<g id="major-road-lines" stroke="#fff59d" stroke-width="1" stroke-dasharray="10,6" aria-hidden="true">'
     );
     svgParts.push(`<line x1="0" y1="${height * 0.35}" x2="${width}" y2="${height * 0.35}"/>`);
     svgParts.push(`<line x1="0" y1="${height * 0.7}" x2="${width}" y2="${height * 0.7}"/>`);
@@ -517,7 +525,9 @@ export class MapEngine {
     svgParts.push('</g>');
 
     // Minor roads (narrower, lighter)
-    svgParts.push('<g id="minor-roads" stroke="#ffffff" stroke-width="3" stroke-linecap="round">');
+    svgParts.push(
+      '<g id="minor-roads" stroke="#ffffff" stroke-width="3" stroke-linecap="round" aria-hidden="true">'
+    );
 
     // Grid of minor roads
     const gridSpacing = 60;
@@ -531,7 +541,9 @@ export class MapEngine {
     svgParts.push('</g>');
 
     // Road borders for depth
-    svgParts.push('<g id="road-borders" stroke="#9e9e9e" stroke-width="0.5" fill="none">');
+    svgParts.push(
+      '<g id="road-borders" stroke="#9e9e9e" stroke-width="0.5" fill="none" aria-hidden="true">'
+    );
     svgParts.push(
       `<line x1="0" y1="${height * 0.35 - 3}" x2="${width}" y2="${height * 0.35 - 3}"/>`
     );
@@ -545,7 +557,7 @@ export class MapEngine {
    * Adds decorative grid lines to simulate map tiles
    */
   private addGridLines(svgParts: string[], width: number, height: number): void {
-    svgParts.push('<g id="grid" opacity="0.3">');
+    svgParts.push('<g id="grid" opacity="0.3" aria-hidden="true">');
 
     // Vertical lines
     for (let x = 0; x <= width; x += TILE_SIZE) {
@@ -575,9 +587,16 @@ export class MapEngine {
     const shape = marker.style?.shape || 'pin';
 
     const parts: string[] = [];
-    const markerTitle = marker.location.name || marker.label || 'Map marker';
+    const locationName = marker.location.name;
+    const label = marker.label;
+    let markerTitle = locationName || label || 'Map marker';
+
+    if (locationName && label && locationName !== label) {
+      markerTitle = `${locationName} (marker ${label})`;
+    }
+
     parts.push(
-      `<g class="marker" transform="translate(${pixel.x}, ${pixel.y})" role="graphics-symbol" aria-label="${this.escapeXml(markerTitle)}">`
+      `<g class="marker" transform="translate(${pixel.x}, ${pixel.y})" role="graphics-symbol" aria-label="${this.escapeXml(markerTitle)}" tabindex="0">`
     );
     parts.push(`<title>${this.escapeXml(markerTitle)}</title>`);
 
@@ -603,7 +622,7 @@ export class MapEngine {
     if (marker.label) {
       const labelY = shape === 'pin' ? -size - 5 : 0;
       parts.push(
-        `<text x="0" y="${labelY}" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="black" stroke="white" stroke-width="3" paint-order="stroke">${this.escapeXml(marker.label)}</text>`
+        `<text x="0" y="${labelY}" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="black" stroke="white" stroke-width="3" paint-order="stroke" aria-hidden="true">${this.escapeXml(marker.label)}</text>`
       );
     }
 
@@ -640,7 +659,7 @@ export class MapEngine {
     const y = height - 30;
 
     const parts: string[] = [];
-    parts.push(`<g class="scale">`);
+    parts.push(`<g class="scale" aria-hidden="true">`);
 
     // Scale bar background
     parts.push(
