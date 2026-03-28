@@ -400,7 +400,8 @@ export class Compositor {
 
     parts.push('<g class="pictures">');
 
-    for (const picture of pictures) {
+    for (let i = 0; i < pictures.length; i++) {
+      const picture = pictures[i];
       const { rect } = picture;
       const altText = picture.image.altText;
       const caption = picture.image.caption;
@@ -412,7 +413,9 @@ export class Compositor {
       }
 
       parts.push(
-        `<g class="picture" data-index="${picture.imageIndex}" role="graphics-symbol" aria-label="${escapeXml(pictureTitle)}" tabindex="0">`
+        `<g class="picture" data-index="${picture.imageIndex}" role="graphics-symbol" ` +
+          `aria-label="${escapeXml(pictureTitle)}" aria-posinset="${i + 1}" ` +
+          `aria-setsize="${pictures.length}" tabindex="0">`
       );
       parts.push(`<title>${escapeXml(pictureTitle)}</title>`);
 

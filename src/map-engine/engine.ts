@@ -311,8 +311,15 @@ export class MapEngine {
     // Render markers
     if (markers.length > 0) {
       svgParts.push('<g id="markers">');
-      markers.forEach((marker) => {
-        const markerSvg = this.renderMarker(marker, style, width, height);
+      markers.forEach((marker, index) => {
+        const markerSvg = this.renderMarker(
+          marker,
+          style,
+          width,
+          height,
+          index + 1,
+          markers.length
+        );
         svgParts.push(markerSvg);
       });
       svgParts.push('</g>');
@@ -579,7 +586,14 @@ export class MapEngine {
   /**
    * Renders a single marker on the map
    */
-  private renderMarker(marker: MapMarker, style: MapStyle, width: number, height: number): string {
+  private renderMarker(
+    marker: MapMarker,
+    style: MapStyle,
+    width: number,
+    height: number,
+    posInSet?: number,
+    setSize?: number
+  ): string {
     const pixel = geoToViewportPixel(marker.location, style.center, style.zoom, width, height);
 
     const color = sanitizeColor(marker.style?.color, '#e74c3c');
@@ -595,8 +609,14 @@ export class MapEngine {
       markerTitle = `${locationName} (marker ${label})`;
     }
 
+    let accessibilityAttrs = '';
+    if (posInSet !== undefined && setSize !== undefined) {
+      accessibilityAttrs = ` aria-posinset="${posInSet}" aria-setsize="${setSize}"`;
+    }
+
     parts.push(
-      `<g class="marker" transform="translate(${pixel.x}, ${pixel.y})" role="graphics-symbol" aria-label="${this.escapeXml(markerTitle)}" tabindex="0">`
+      `<g class="marker" transform="translate(${pixel.x}, ${pixel.y})" role="graphics-symbol" ` +
+        `aria-label="${this.escapeXml(markerTitle)}"${accessibilityAttrs} tabindex="0">`
     );
     parts.push(`<title>${this.escapeXml(markerTitle)}</title>`);
 

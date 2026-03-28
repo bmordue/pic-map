@@ -9,3 +9,7 @@
 ## 2025-05-24 - [Enhance SVG Accessibility with Focus and Hide]
 **Learning:** For interactive SVG items like map markers and photo frames, `tabindex="0"` is essential for keyboard navigation. Combining item names with link labels (e.g., "Big Ben (marker A)") in `aria-label` provides much better context. Conversely, marking decorative groups like scale bars, grid lines, and water features with `aria-hidden="true"` declutters the accessibility tree significantly.
 **Action:** Add `tabindex="0"` to interactive SVG groups and use descriptive labels that correlate items. Always hide decorative or redundant groups with `aria-hidden="true"`.
+
+## 2025-06-05 - [Positional ARIA Context for SVG Collections]
+**Learning:** For interactive SVG items that form a logical collection (like map markers or a picture border), screen reader users benefit from knowing the total count and their current position. Standard `aria-posinset` and `aria-setsize` attributes, when combined with `role="graphics-symbol"`, provide this missing navigation context.
+**Action:** Always include `aria-posinset` and `aria-setsize` on items in a generated list or collection within an SVG to improve orientation for assistive technology users.

@@ -177,8 +177,10 @@ export class PictureBorderEngine {
     parts.push(
       `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ` +
         `width="${layout.pageWidth}" height="${layout.pageHeight}" ` +
-        `viewBox="0 0 ${layout.pageWidth} ${layout.pageHeight}">`
+        `viewBox="0 0 ${layout.pageWidth} ${layout.pageHeight}" ` +
+        `role="img" aria-label="Picture border for map">`
     );
+    parts.push(`<title>Picture border for map</title>`);
 
     // Definitions for patterns and masks
     parts.push('<defs>');
@@ -210,7 +212,7 @@ export class PictureBorderEngine {
     // Render picture frames
     parts.push('<g id="picture-frames">');
     positionedPictures.forEach((pic, idx) => {
-      this.renderPictureFrame(parts, pic, style, idx);
+      this.renderPictureFrame(parts, pic, style, idx, positionedPictures.length);
     });
     parts.push('</g>');
 
@@ -262,7 +264,8 @@ export class PictureBorderEngine {
     parts: string[],
     pic: PositionedPicture,
     style: Required<PictureBorderStyle>,
-    index: number
+    index: number,
+    totalCount: number
   ): void {
     const x = pic.slot.x + pic.offsetX;
     const y = pic.slot.y + pic.offsetY;
@@ -270,7 +273,9 @@ export class PictureBorderEngine {
       pic.image.altText || pic.image.caption || `Picture from ${pic.image.filePath}`;
 
     parts.push(
-      `<g class="picture-frame" data-slot="${pic.slot.id}" role="img" aria-label="${this.escapeXml(pictureTitle)}">`
+      `<g class="picture-frame" data-slot="${pic.slot.id}" role="graphics-symbol" ` +
+        `aria-label="${this.escapeXml(pictureTitle)}" aria-posinset="${index + 1}" ` +
+        `aria-setsize="${totalCount}" tabindex="0">`
     );
     parts.push(`<title>${this.escapeXml(pictureTitle)}</title>`);
 
