@@ -31,6 +31,9 @@ describe('Compositor Accessibility', () => {
     expect(result.svg).toContain('role="graphics-symbol"');
     // Should have aria-label with label correlation
     expect(result.svg).toContain('aria-label="Image 1 (labeled A)"');
+    // Should have aria-posinset and aria-setsize
+    expect(result.svg).toContain('aria-posinset="1"');
+    expect(result.svg).toContain('aria-setsize="1"');
     // Should have a title element inside
     expect(result.svg).toContain('<title>Image 1 (labeled A)</title>');
     // Should have tabindex for keyboard navigation
