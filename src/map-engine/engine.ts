@@ -294,6 +294,12 @@ export class MapEngine {
       `<desc>A map showing geographic locations and markers at zoom level ${style.zoom}</desc>`
     );
 
+    // Add interactive styles
+    svgParts.push('<style>');
+    svgParts.push('  .marker { cursor: pointer; outline: none; }');
+    svgParts.push('  .marker:focus-visible { outline: 3px solid #4a90e2; outline-offset: 2px; }');
+    svgParts.push('</style>');
+
     // Background
     svgParts.push(`<rect width="${width}" height="${height}" fill="${backgroundColor}"/>`);
 

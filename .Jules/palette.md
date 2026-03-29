@@ -13,3 +13,7 @@
 ## 2025-06-05 - [Positional ARIA Context for SVG Collections]
 **Learning:** For interactive SVG items that form a logical collection (like map markers or a picture border), screen reader users benefit from knowing the total count and their current position. Standard `aria-posinset` and `aria-setsize` attributes, when combined with `role="graphics-symbol"`, provide this missing navigation context.
 **Action:** Always include `aria-posinset` and `aria-setsize` on items in a generated list or collection within an SVG to improve orientation for assistive technology users.
+
+## 2025-06-12 - [Interactive Focus and Hover Styles for SVG]
+**Learning:** Visual feedback for interactive SVG elements is crucial for both mouse and keyboard users. Providing a `cursor: pointer` on hover and a clear, high-contrast `outline` for focused elements (using the `:focus-visible` pseudo-class) ensures that users can easily identify and navigate interactive items within a complex graphic.
+**Action:** Include a `<style>` block in generated SVGs to define interactive states for core classes like `.marker` and `.picture`, ensuring focus visibility is not lost when elements are navigated via keyboard.

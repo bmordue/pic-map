@@ -46,4 +46,16 @@ describe('Compositor Accessibility', () => {
     // But since it's now applied to the parent, searching for it specifically:
     expect(result.svg).not.toMatch(/<g role="img" aria-label="Image 1">/);
   });
+
+  it('should include interactive styles in the composition SVG', () => {
+    const compositor = new Compositor(defaultConfig);
+    const result = compositor.render(defaultInput);
+
+    expect(result.svg).toContain('<style>');
+    expect(result.svg).toContain('.picture, .marker { cursor: pointer; outline: none; }');
+    expect(result.svg).toContain(
+      '.picture:focus-visible, .marker:focus-visible { outline: 3px solid #4a90e2;'
+    );
+    expect(result.svg).toContain('</style>');
+  });
 });

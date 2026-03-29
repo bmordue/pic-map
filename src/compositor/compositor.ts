@@ -161,6 +161,14 @@ export class Compositor {
       svgParts.push(`<desc>${escapeXml(this.config.description)}</desc>`);
     }
 
+    // Add interactive styles
+    svgParts.push('<style>');
+    svgParts.push('  .picture, .marker { cursor: pointer; outline: none; }');
+    svgParts.push(
+      '  .picture:focus-visible, .marker:focus-visible { outline: 3px solid #4a90e2; outline-offset: 2px; }'
+    );
+    svgParts.push('</style>');
+
     // Collect defs for pictures (clip paths and gradients)
     this.collectPictureDefs(layout.pictures, defsParts);
 

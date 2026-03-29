@@ -51,4 +51,18 @@ describe('MapEngine Accessibility', () => {
     expect(result.svg).toContain('tabindex="0"');
     expect(result.svg).toContain('aria-hidden="true"'); // For decorative features and scale
   });
+
+  it('should include interactive styles in the SVG', () => {
+    const engine = new MapEngine();
+    const result = engine.renderMap({
+      style: defaultMapStyle,
+      width: 800,
+      height: 600,
+    });
+
+    expect(result.svg).toContain('<style>');
+    expect(result.svg).toContain('.marker { cursor: pointer; outline: none; }');
+    expect(result.svg).toContain('.marker:focus-visible { outline: 3px solid #4a90e2;');
+    expect(result.svg).toContain('</style>');
+  });
 });
