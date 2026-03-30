@@ -163,7 +163,10 @@ export class Compositor {
 
     // Add interactive styles
     svgParts.push('<style>');
-    svgParts.push('  .picture, .marker { cursor: pointer; outline: none; }');
+    svgParts.push(
+      '  .picture, .marker { cursor: pointer; outline: none; transition: filter 0.2s; }'
+    );
+    svgParts.push('  .picture:hover, .marker:hover { filter: brightness(1.1); }');
     svgParts.push(
       '  .picture:focus-visible, .marker:focus-visible { outline: 3px solid #4a90e2; outline-offset: 2px; }'
     );
@@ -316,7 +319,9 @@ export class Compositor {
     const parts: string[] = [];
     const mapArea = layout.mapArea;
 
-    parts.push(`<g class="map-area" transform="translate(${mapArea.x}, ${mapArea.y})">`);
+    parts.push(
+      `<g class="map-area" transform="translate(${mapArea.x}, ${mapArea.y})" role="img" aria-label="Map area">`
+    );
 
     // Clip the map to the map area
     parts.push(`<defs>`);

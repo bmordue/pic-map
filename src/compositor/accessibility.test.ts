@@ -29,6 +29,8 @@ describe('Compositor Accessibility', () => {
 
     // Should have role="graphics-symbol" on the picture group
     expect(result.svg).toContain('role="graphics-symbol"');
+    // Should have role="img" and aria-label on the map area
+    expect(result.svg).toContain('role="img" aria-label="Map area"');
     // Should have aria-label with label correlation
     expect(result.svg).toContain('aria-label="Image 1 (labeled A)"');
     // Should have aria-posinset and aria-setsize
@@ -52,7 +54,10 @@ describe('Compositor Accessibility', () => {
     const result = compositor.render(defaultInput);
 
     expect(result.svg).toContain('<style>');
-    expect(result.svg).toContain('.picture, .marker { cursor: pointer; outline: none; }');
+    expect(result.svg).toContain(
+      '.picture, .marker { cursor: pointer; outline: none; transition: filter 0.2s; }'
+    );
+    expect(result.svg).toContain('.picture:hover, .marker:hover { filter: brightness(1.1); }');
     expect(result.svg).toContain(
       '.picture:focus-visible, .marker:focus-visible { outline: 3px solid #4a90e2;'
     );

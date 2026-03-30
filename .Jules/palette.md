@@ -17,3 +17,11 @@
 ## 2025-06-12 - [Interactive Focus and Hover Styles for SVG]
 **Learning:** Visual feedback for interactive SVG elements is crucial for both mouse and keyboard users. Providing a `cursor: pointer` on hover and a clear, high-contrast `outline` for focused elements (using the `:focus-visible` pseudo-class) ensures that users can easily identify and navigate interactive items within a complex graphic.
 **Action:** Include a `<style>` block in generated SVGs to define interactive states for core classes like `.marker` and `.picture`, ensuring focus visibility is not lost when elements are navigated via keyboard.
+
+## 2025-07-20 - [Restoring SVG Context in Compositor]
+**Learning:** When embedding external SVG content (like maps) into a larger composition by stripping the outer `<svg>` tag, all root-level accessibility metadata (role, aria-label, title) is lost. This leaves the embedded section semantically "anonymous" to screen readers.
+**Action:** Always wrap embedded SVG content in a `<g>` element with `role="img"` and a descriptive `aria-label` to restore the missing context for assistive technologies.
+
+## 2025-07-22 - [Standardizing Micro-Interactions for SVG Components]
+**Learning:** For a cohesive user experience across different rendering engines (Map, Picture Border, Compositor), micro-interactions like hover states should be standardized. Using `filter: brightness(1.1)` with a `transition: filter 0.2s` provides a non-intrusive yet clear visual cue that an element is interactive.
+**Action:** Include a standardized `<style>` block in all SVG-generating engines that defines cursor, transition, and hover brightness for interactive classes like `.marker` and `.picture`.

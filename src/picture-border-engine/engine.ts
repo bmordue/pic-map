@@ -182,6 +182,15 @@ export class PictureBorderEngine {
     );
     parts.push(`<title>Picture border for map</title>`);
 
+    // Add interactive styles
+    parts.push('<style>');
+    parts.push('  .picture-frame { cursor: pointer; outline: none; transition: filter 0.2s; }');
+    parts.push('  .picture-frame:hover { filter: brightness(1.1); }');
+    parts.push(
+      '  .picture-frame:focus-visible { outline: 3px solid #4a90e2; outline-offset: 2px; }'
+    );
+    parts.push('</style>');
+
     // Definitions for patterns and masks
     parts.push('<defs>');
     // Add clip paths for rounded corners if needed
@@ -273,7 +282,7 @@ export class PictureBorderEngine {
       pic.image.altText || pic.image.caption || `Picture from ${pic.image.filePath}`;
 
     parts.push(
-      `<g class="picture-frame" data-slot="${pic.slot.id}" role="graphics-symbol" ` +
+      `<g class="picture-frame picture" data-slot="${pic.slot.id}" role="graphics-symbol" ` +
         `aria-label="${this.escapeXml(pictureTitle)}" aria-posinset="${index + 1}" ` +
         `aria-setsize="${totalCount}" tabindex="0">`
     );

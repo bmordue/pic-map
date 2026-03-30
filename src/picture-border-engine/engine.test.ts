@@ -230,7 +230,20 @@ describe('PictureBorderEngine', () => {
       });
 
       expect(result.svg).toContain('id="picture-frames"');
-      expect(result.svg).toContain('class="picture-frame"');
+      expect(result.svg).toContain('class="picture-frame picture"');
+    });
+
+    it('should include interactive styles', () => {
+      const engine = new PictureBorderEngine();
+      const result = engine.renderBorder({
+        layout: defaultLayout,
+        images: sampleImages,
+      });
+
+      expect(result.svg).toContain('<style>');
+      expect(result.svg).toContain('.picture-frame { cursor: pointer;');
+      expect(result.svg).toContain('.picture-frame:hover { filter: brightness(1.1); }');
+      expect(result.svg).toContain('</style>');
     });
 
     it('should include slot reference in picture frames', () => {

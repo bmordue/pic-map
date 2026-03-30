@@ -20,7 +20,7 @@ describe('MapEngine Accessibility', () => {
     });
 
     expect(result.svg).toContain('role="img"');
-    expect(result.svg).toContain('aria-label="Map centered at 51.5074, -0.1278"');
+    expect(result.svg).toContain('aria-label="Map of London"');
     expect(result.svg).toContain('<title>Map of London</title>');
     expect(result.svg).toContain(
       '<desc>A map showing geographic locations and markers at zoom level 12</desc>'
@@ -61,7 +61,10 @@ describe('MapEngine Accessibility', () => {
     });
 
     expect(result.svg).toContain('<style>');
-    expect(result.svg).toContain('.marker { cursor: pointer; outline: none; }');
+    expect(result.svg).toContain(
+      '.marker { cursor: pointer; outline: none; transition: filter 0.2s; }'
+    );
+    expect(result.svg).toContain('.marker:hover { filter: brightness(1.1); }');
     expect(result.svg).toContain('.marker:focus-visible { outline: 3px solid #4a90e2;');
     expect(result.svg).toContain('</style>');
   });

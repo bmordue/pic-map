@@ -286,17 +286,21 @@ export class MapEngine {
     const svgParts: string[] = [];
 
     // SVG header
+    const mapLabel = style.center.name
+      ? `Map of ${style.center.name}`
+      : `Map centered at ${style.center.latitude}, ${style.center.longitude}`;
     svgParts.push(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="Map centered at ${style.center.latitude}, ${style.center.longitude}">`
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${this.escapeXml(mapLabel)}">`
     );
-    svgParts.push(`<title>Map of ${style.center.name || 'selected area'}</title>`);
+    svgParts.push(`<title>Map of ${this.escapeXml(style.center.name || 'selected area')}</title>`);
     svgParts.push(
       `<desc>A map showing geographic locations and markers at zoom level ${style.zoom}</desc>`
     );
 
     // Add interactive styles
     svgParts.push('<style>');
-    svgParts.push('  .marker { cursor: pointer; outline: none; }');
+    svgParts.push('  .marker { cursor: pointer; outline: none; transition: filter 0.2s; }');
+    svgParts.push('  .marker:hover { filter: brightness(1.1); }');
     svgParts.push('  .marker:focus-visible { outline: 3px solid #4a90e2; outline-offset: 2px; }');
     svgParts.push('</style>');
 
