@@ -20,8 +20,16 @@ describe('MapEngine Accessibility', () => {
     });
 
     expect(result.svg).toContain('role="img"');
-    expect(result.svg).toContain('aria-label="Map centered at 51.5074, -0.1278"');
+    expect(result.svg).toContain('aria-label="Map of London"');
     expect(result.svg).toContain('<title>Map of London</title>');
+
+    // Should also work without name
+    const resultNoName = engine.renderMap({
+      style: { ...defaultMapStyle, center: { latitude: 51.5074, longitude: -0.1278 } },
+      width: 800,
+      height: 600,
+    });
+    expect(resultNoName.svg).toContain('aria-label="Map centered at 51.5074, -0.1278"');
     expect(result.svg).toContain(
       '<desc>A map showing geographic locations and markers at zoom level 12</desc>'
     );

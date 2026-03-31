@@ -286,8 +286,12 @@ export class MapEngine {
     const svgParts: string[] = [];
 
     // SVG header
+    const mapAriaLabel = style.center.name
+      ? `Map of ${style.center.name}`
+      : `Map centered at ${style.center.latitude}, ${style.center.longitude}`;
+
     svgParts.push(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="Map centered at ${style.center.latitude}, ${style.center.longitude}">`
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${this.escapeXml(mapAriaLabel)}">`
     );
     svgParts.push(`<title>Map of ${style.center.name || 'selected area'}</title>`);
     svgParts.push(

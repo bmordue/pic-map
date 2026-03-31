@@ -316,7 +316,9 @@ export class Compositor {
     const parts: string[] = [];
     const mapArea = layout.mapArea;
 
-    parts.push(`<g class="map-area" transform="translate(${mapArea.x}, ${mapArea.y})">`);
+    parts.push(
+      `<g class="map-area" transform="translate(${mapArea.x}, ${mapArea.y})" role="img" aria-label="Map area">`
+    );
 
     // Clip the map to the map area
     parts.push(`<defs>`);
