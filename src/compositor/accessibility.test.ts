@@ -23,9 +23,14 @@ describe('Compositor Accessibility', () => {
     links: [{ imageIndex: 0, markerPosition: { x: 100, y: 150 }, label: 'A' }],
   };
 
-  it('should include accessibility metadata in pictures', () => {
+  it('should include accessibility metadata in pictures and map area', () => {
     const compositor = new Compositor(defaultConfig);
     const result = compositor.render(defaultInput);
+
+    // Should have role="img" and aria-label="Map area" on the map area group
+    expect(result.svg).toContain('<g class="map-area" transform="translate(');
+    expect(result.svg).toContain('role="img"');
+    expect(result.svg).toContain('aria-label="Map area"');
 
     // Should have role="graphics-symbol" on the picture group
     expect(result.svg).toContain('role="graphics-symbol"');

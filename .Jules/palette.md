@@ -17,3 +17,11 @@
 ## 2025-06-12 - [Interactive Focus and Hover Styles for SVG]
 **Learning:** Visual feedback for interactive SVG elements is crucial for both mouse and keyboard users. Providing a `cursor: pointer` on hover and a clear, high-contrast `outline` for focused elements (using the `:focus-visible` pseudo-class) ensures that users can easily identify and navigate interactive items within a complex graphic.
 **Action:** Include a `<style>` block in generated SVGs to define interactive states for core classes like `.marker` and `.picture`, ensuring focus visibility is not lost when elements are navigated via keyboard.
+
+## 2025-06-20 - [Restoring SVG Metadata after Composition]
+**Learning:** When embedding external SVG content by stripping its root `<svg>` tags (as done in the `Compositor`), all accessibility metadata (role, aria-label, title) from that root is lost. This leaves the embedded content "anonymous" to screen readers.
+**Action:** Always re-apply semantic roles and descriptive `aria-label`s to the container group (e.g., `.map-area`) that holds the embedded SVG content to maintain accessibility context.
+
+## 2025-06-21 - [Prioritize Descriptive Labels over Technical Data]
+**Learning:** For geographic components like maps, raw coordinates in an `aria-label` provide very little value to most users. Using a human-readable location name (like "Map of London") as the primary label significantly improves the immediate understanding of the component's purpose.
+**Action:** In `MapEngine` and similar components, prioritize high-level descriptive fields (like location names or titles) for `aria-label`s, falling back to technical data (like coordinates) only when necessary.
