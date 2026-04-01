@@ -25,3 +25,7 @@
 ## 2025-06-21 - [Prioritize Descriptive Labels over Technical Data]
 **Learning:** For geographic components like maps, raw coordinates in an `aria-label` provide very little value to most users. Using a human-readable location name (like "Map of London") as the primary label significantly improves the immediate understanding of the component's purpose.
 **Action:** In `MapEngine` and similar components, prioritize high-level descriptive fields (like location names or titles) for `aria-label`s, falling back to technical data (like coordinates) only when necessary.
+
+## 2025-06-25 - [Consistent Interactive Feedback and A11y Decluttering]
+**Learning:** For interactive SVG elements like map markers and photo frames, visual hover feedback (brightness/transition) is as important as focus styles. Additionally, decluttering the accessibility tree by hiding redundant metadata (like attribution text and duplicated link labels) improves the experience for screen reader users by focusing on the primary interactive content.
+**Action:** Always include both focus (`:focus-visible`) and hover (`:hover`) styles for interactive SVG elements. Use `aria-hidden="true"` on decorative or redundant elements to ensure a clean accessibility tree.

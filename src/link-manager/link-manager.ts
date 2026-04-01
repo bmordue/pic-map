@@ -629,7 +629,7 @@ export class LinkManager {
     style: ReturnType<LinkManager['normalizeStyle']>
   ): string {
     const parts: string[] = [];
-    parts.push('<g class="link-labels">');
+    parts.push('<g class="link-labels" aria-hidden="true">');
 
     for (const resolved of resolvedLinks) {
       // Label near the picture
