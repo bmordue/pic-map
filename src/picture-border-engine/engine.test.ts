@@ -230,7 +230,7 @@ describe('PictureBorderEngine', () => {
       });
 
       expect(result.svg).toContain('id="picture-frames"');
-      expect(result.svg).toContain('class="picture-frame"');
+      expect(result.svg).toContain('class="picture-frame picture"');
     });
 
     it('should include slot reference in picture frames', () => {
