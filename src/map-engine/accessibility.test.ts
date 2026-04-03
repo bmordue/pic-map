@@ -69,7 +69,8 @@ describe('MapEngine Accessibility', () => {
     });
 
     expect(result.svg).toContain('<style>');
-    expect(result.svg).toContain('.marker { cursor: pointer; outline: none; }');
+    expect(result.svg).toContain('.marker { cursor: pointer; outline: none; transition: filter 0.2s; }');
+    expect(result.svg).toContain('.marker:hover { filter: brightness(1.1); }');
     expect(result.svg).toContain('.marker:focus-visible { outline: 3px solid #4a90e2;');
     expect(result.svg).toContain('</style>');
   });
