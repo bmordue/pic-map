@@ -300,7 +300,8 @@ export class MapEngine {
 
     // Add interactive styles
     svgParts.push('<style>');
-    svgParts.push('  .marker { cursor: pointer; outline: none; }');
+    svgParts.push('  .marker { cursor: pointer; outline: none; transition: filter 0.2s; }');
+    svgParts.push('  .marker:hover { filter: brightness(1.1); }');
     svgParts.push('  .marker:focus-visible { outline: 3px solid #4a90e2; outline-offset: 2px; }');
     svgParts.push('</style>');
 
@@ -729,7 +730,7 @@ export class MapEngine {
     const x = width - 10;
     const y = height - 10;
 
-    return `<text x="${x}" y="${y}" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#666">${this.escapeXml(attributionText)}</text>`;
+    return `<text x="${x}" y="${y}" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#666" aria-hidden="true">${this.escapeXml(attributionText)}</text>`;
   }
 
   /**

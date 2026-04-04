@@ -25,3 +25,7 @@
 ## 2025-06-21 - [Prioritize Descriptive Labels over Technical Data]
 **Learning:** For geographic components like maps, raw coordinates in an `aria-label` provide very little value to most users. Using a human-readable location name (like "Map of London") as the primary label significantly improves the immediate understanding of the component's purpose.
 **Action:** In `MapEngine` and similar components, prioritize high-level descriptive fields (like location names or titles) for `aria-label`s, falling back to technical data (like coordinates) only when necessary.
+
+## 2025-06-25 - [Consistent Interactive SVG Feedback]
+**Learning:** Visual feedback for interactive SVG elements (markers, pictures) should be consistent across all rendering modules. Using a shared set of CSS classes (.marker, .picture) and a standard set of effects (brightness hover, high-contrast focus outline with offset, and transitions) provides a professional, cohesive user experience. When verifying these interactions with automated tools, overlapping elements (like labels on pictures) may require forced events.
+**Action:** Implement standard hover and focus CSS blocks in all SVG-generating engines and ensure consistency in class naming and accessibility attributes. Use `force=True` in Playwright verification when elements overlap.

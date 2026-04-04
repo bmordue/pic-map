@@ -230,7 +230,30 @@ describe('PictureBorderEngine', () => {
       });
 
       expect(result.svg).toContain('id="picture-frames"');
-      expect(result.svg).toContain('class="picture-frame"');
+      expect(result.svg).toContain('class="picture"');
+    });
+
+    it('should include interactive styles and accessibility attributes', () => {
+      const engine = new PictureBorderEngine();
+      const links = [{ imageId: '0', label: 'A' }];
+      const result = engine.renderBorder({
+        layout: defaultLayout,
+        images: [sampleImages[0]],
+        links,
+      });
+
+      // Style block
+      expect(result.svg).toContain('<style>');
+      expect(result.svg).toContain('.picture { cursor: pointer; outline: none; transition: filter 0.2s; }');
+      expect(result.svg).toContain('.picture:hover { filter: brightness(1.1); }');
+
+      // Enhanced aria-label
+      expect(result.svg).toContain('aria-label="Image 1 (labeled A)"');
+
+      // Decorative elements hidden
+      expect(result.svg).toContain('class="border-background" aria-hidden="true"');
+      expect(result.svg).toContain('stroke-dasharray="5,5" aria-hidden="true"');
+      expect(result.svg).toContain('class="label-badge" aria-hidden="true"');
     });
 
     it('should include slot reference in picture frames', () => {
