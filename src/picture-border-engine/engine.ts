@@ -182,6 +182,15 @@ export class PictureBorderEngine {
     );
     parts.push(`<title>Picture border for map</title>`);
 
+    // Add interactive styles
+    parts.push('<style>');
+    parts.push('  .picture { cursor: pointer; outline: none; transition: filter 0.2s; }');
+    parts.push('  .picture:hover { filter: brightness(1.1); }');
+    parts.push(
+      '  .picture:focus-visible { outline: 3px solid #4a90e2; outline-offset: 2px; }'
+    );
+    parts.push('</style>');
+
     // Definitions for patterns and masks
     parts.push('<defs>');
     // Add clip paths for rounded corners if needed
@@ -206,7 +215,7 @@ export class PictureBorderEngine {
     parts.push(
       `<rect x="${layout.innerArea.x}" y="${layout.innerArea.y}" ` +
         `width="${layout.innerArea.width}" height="${layout.innerArea.height}" ` +
-        `fill="none" stroke="#cccccc" stroke-width="1" stroke-dasharray="5,5"/>`
+        `fill="none" stroke="#cccccc" stroke-width="1" stroke-dasharray="5,5" aria-hidden="true"/>`
     );
 
     // Render picture frames
@@ -227,6 +236,9 @@ export class PictureBorderEngine {
    */
   private addBorderBackground(parts: string[], layout: BorderLayout, color: string): void {
     const { pageWidth, pageHeight, borderWidth, margin, innerArea } = layout;
+
+    // Background rectangles are decorative
+    parts.push('<g id="border-background" aria-hidden="true">');
 
     // Top border area
     parts.push(
@@ -255,6 +267,8 @@ export class PictureBorderEngine {
         `width="${borderWidth}" height="${innerArea.height}" ` +
         `fill="${color}"/>`
     );
+
+    parts.push('</g>');
   }
 
   /**
@@ -273,7 +287,7 @@ export class PictureBorderEngine {
       pic.image.altText || pic.image.caption || `Picture from ${pic.image.filePath}`;
 
     parts.push(
-      `<g class="picture-frame" data-slot="${pic.slot.id}" role="graphics-symbol" ` +
+      `<g class="picture" data-slot="${pic.slot.id}" role="graphics-symbol" ` +
         `aria-label="${this.escapeXml(pictureTitle)}" aria-posinset="${index + 1}" ` +
         `aria-setsize="${totalCount}" tabindex="0">`
     );
@@ -290,17 +304,17 @@ export class PictureBorderEngine {
     const useClipPath = style.cornerRadius > 0 ? ` clip-path="url(#clip-${index})"` : '';
     parts.push(
       `<rect x="${x}" y="${y}" width="${pic.renderWidth}" height="${pic.renderHeight}" ` +
-        `fill="#e0e0e0"${useClipPath}/>`
+        `fill="#e0e0e0"${useClipPath} aria-hidden="true"/>`
     );
 
     // Image placeholder cross pattern
     parts.push(
       `<line x1="${x}" y1="${y}" x2="${x + pic.renderWidth}" y2="${y + pic.renderHeight}" ` +
-        `stroke="#cccccc" stroke-width="1"${useClipPath}/>`
+        `stroke="#cccccc" stroke-width="1"${useClipPath} aria-hidden="true"/>`
     );
     parts.push(
       `<line x1="${x + pic.renderWidth}" y1="${y}" x2="${x}" y2="${y + pic.renderHeight}" ` +
-        `stroke="#cccccc" stroke-width="1"${useClipPath}/>`
+        `stroke="#cccccc" stroke-width="1"${useClipPath} aria-hidden="true"/>`
     );
 
     // Border
@@ -340,11 +354,11 @@ export class PictureBorderEngine {
         `fill="${style.borderColor}"/>`
     );
 
-    // Label text
+    // Label text - hidden as the aria-label on the group already includes it
     parts.push(
       `<text x="${labelX + labelSize / 2}" y="${labelY + labelSize / 2 + 5}" ` +
         `text-anchor="middle" font-family="Arial, sans-serif" font-size="14" ` +
-        `font-weight="bold" fill="white">${this.escapeXml(pic.label!)}</text>`
+        `font-weight="bold" fill="white" aria-hidden="true">${this.escapeXml(pic.label!)}</text>`
     );
   }
 

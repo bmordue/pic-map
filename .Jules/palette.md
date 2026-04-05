@@ -25,3 +25,7 @@
 ## 2025-06-21 - [Prioritize Descriptive Labels over Technical Data]
 **Learning:** For geographic components like maps, raw coordinates in an `aria-label` provide very little value to most users. Using a human-readable location name (like "Map of London") as the primary label significantly improves the immediate understanding of the component's purpose.
 **Action:** In `MapEngine` and similar components, prioritize high-level descriptive fields (like location names or titles) for `aria-label`s, falling back to technical data (like coordinates) only when necessary.
+
+## 2025-06-25 - [Modern Hover States and Clean Accessibility in SVG]
+**Learning:** Adding `transition: filter 0.2s` and `filter: brightness(1.1)` on `:hover` for interactive SVG elements provides a subtle, standard visual cue that enhances the user experience. Simultaneously, marking auxiliary elements (attribution, scale bars, placeholders, and redundant text labels) with `aria-hidden="true"` declutters the accessibility tree, allowing users of assistive technology to focus on the core interactive content.
+**Action:** Always include smooth CSS transitions and brightness filters for interactive SVG classes like `.picture` and `.marker`. Rigorously use `aria-hidden="true"` on all decorative, structural, or redundant elements within the SVG output.
