@@ -112,6 +112,7 @@ describe('PictureBorderEngine', () => {
       expect(result.svg).toContain('>B<');
       expect(result.svg).toContain('>C<');
       expect(result.svg).toContain('>D<');
+      expect(result.svg).toContain('aria-label="Image 1 (labeled A)"');
     });
 
     it('should escape XML special characters in labels', () => {
@@ -230,7 +231,7 @@ describe('PictureBorderEngine', () => {
       });
 
       expect(result.svg).toContain('id="picture-frames"');
-      expect(result.svg).toContain('class="picture-frame"');
+      expect(result.svg).toContain('class="picture"');
     });
 
     it('should include slot reference in picture frames', () => {
