@@ -57,7 +57,10 @@ describe('Compositor Accessibility', () => {
     const result = compositor.render(defaultInput);
 
     expect(result.svg).toContain('<style>');
-    expect(result.svg).toContain('.picture, .marker { cursor: pointer; outline: none; }');
+    expect(result.svg).toContain(
+      '.picture, .marker { cursor: pointer; outline: none; transition: filter 0.2s; }'
+    );
+    expect(result.svg).toContain('.picture:hover, .marker:hover { filter: brightness(1.1); }');
     expect(result.svg).toContain(
       '.picture:focus-visible, .marker:focus-visible { outline: 3px solid #4a90e2;'
     );
