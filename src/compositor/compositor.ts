@@ -166,7 +166,9 @@ export class Compositor {
     svgParts.push(
       '  .picture, .marker { cursor: pointer; outline: none; transition: filter 0.2s; }'
     );
-    svgParts.push('  .picture:hover, .marker:hover { filter: brightness(1.1); }');
+    svgParts.push(
+      '  .picture:hover, .picture:focus-visible, .marker:hover, .marker:focus-visible { filter: brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }'
+    );
     svgParts.push(
       '  .picture:focus-visible, .marker:focus-visible { outline: 3px solid #4a90e2; outline-offset: 2px; }'
     );
@@ -241,8 +243,9 @@ export class Compositor {
 
       // Clip path for the image area
       const clipId = `image-clip-${picture.imageIndex}`;
+      const cornerRadius = this.pictureStyle.cornerRadius ?? 0;
       defsParts.push(
-        `<clipPath id="${clipId}"><rect x="${x}" y="${y}" width="${width}" height="${height}"/></clipPath>`
+        `<clipPath id="${clipId}"><rect x="${x}" y="${y}" width="${width}" height="${height}" rx="${cornerRadius}" ry="${cornerRadius}"/></clipPath>`
       );
 
       // Vignette gradient
@@ -324,9 +327,10 @@ export class Compositor {
     );
 
     // Clip the map to the map area
+    const cornerRadius = this.pictureStyle.cornerRadius ?? 0;
     parts.push(`<defs>`);
     parts.push(
-      `<clipPath id="map-clip"><rect width="${mapArea.width}" height="${mapArea.height}"/></clipPath>`
+      `<clipPath id="map-clip"><rect width="${mapArea.width}" height="${mapArea.height}" rx="${cornerRadius}" ry="${cornerRadius}"/></clipPath>`
     );
     parts.push(`</defs>`);
 
