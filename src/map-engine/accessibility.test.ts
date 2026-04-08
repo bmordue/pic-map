@@ -30,9 +30,7 @@ describe('MapEngine Accessibility', () => {
       height: 600,
     });
     expect(resultNoName.svg).toContain('aria-label="Map centered at 51.5074, -0.1278"');
-    expect(result.svg).toContain(
-      '<desc>A map of London with no markers at zoom level 12</desc>'
-    );
+    expect(result.svg).toContain('<desc>A map of London with no markers at zoom level 12</desc>');
   });
 
   it('should include descriptive metadata with marker count', () => {
@@ -49,9 +47,7 @@ describe('MapEngine Accessibility', () => {
       markers,
     });
 
-    expect(result.svg).toContain(
-      '<desc>A map of London with 2 markers at zoom level 12</desc>'
-    );
+    expect(result.svg).toContain('<desc>A map of London with 2 markers at zoom level 12</desc>');
   });
 
   it('should include title and aria-label in markers', () => {
