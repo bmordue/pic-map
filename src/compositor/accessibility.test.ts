@@ -60,7 +60,9 @@ describe('Compositor Accessibility', () => {
     expect(result.svg).toContain(
       '.picture, .marker { cursor: pointer; outline: none; transition: filter 0.2s; }'
     );
-    expect(result.svg).toContain('.picture:hover, .marker:hover { filter: brightness(1.1); }');
+    expect(result.svg).toContain(
+      '  .picture:hover, .picture:focus-visible, .marker:hover, .marker:focus-visible { filter: brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }'
+    );
     expect(result.svg).toContain(
       '.picture:focus-visible, .marker:focus-visible { outline: 3px solid #4a90e2;'
     );

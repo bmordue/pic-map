@@ -31,7 +31,26 @@ describe('MapEngine Accessibility', () => {
     });
     expect(resultNoName.svg).toContain('aria-label="Map centered at 51.5074, -0.1278"');
     expect(result.svg).toContain(
-      '<desc>A map showing geographic locations and markers at zoom level 12</desc>'
+      '<desc>A map of London with no markers at zoom level 12</desc>'
+    );
+  });
+
+  it('should include descriptive metadata with marker count', () => {
+    const engine = new MapEngine();
+    const markers: MapMarker[] = [
+      { location: { latitude: 51.5, longitude: -0.1 }, label: '1' },
+      { location: { latitude: 51.6, longitude: -0.2 }, label: '2' },
+    ];
+
+    const result = engine.renderMap({
+      style: defaultMapStyle,
+      width: 800,
+      height: 600,
+      markers,
+    });
+
+    expect(result.svg).toContain(
+      '<desc>A map of London with 2 markers at zoom level 12</desc>'
     );
   });
 
@@ -73,7 +92,9 @@ describe('MapEngine Accessibility', () => {
     expect(result.svg).toContain(
       '.marker { cursor: pointer; outline: none; transition: filter 0.2s; }'
     );
-    expect(result.svg).toContain('.marker:hover { filter: brightness(1.1); }');
+    expect(result.svg).toContain(
+      '.marker:hover, .marker:focus-visible { filter: brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }'
+    );
     expect(result.svg).toContain('.marker:focus-visible { outline: 3px solid #4a90e2;');
     expect(result.svg).toContain('</style>');
   });

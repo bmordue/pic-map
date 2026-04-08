@@ -294,14 +294,22 @@ export class MapEngine {
       `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${this.escapeXml(mapAriaLabel)}">`
     );
     svgParts.push(`<title>Map of ${style.center.name || 'selected area'}</title>`);
+    const markerCountText =
+      markers.length === 0
+        ? 'no markers'
+        : markers.length === 1
+          ? '1 marker'
+          : `${markers.length} markers`;
     svgParts.push(
-      `<desc>A map showing geographic locations and markers at zoom level ${style.zoom}</desc>`
+      `<desc>A map of ${style.center.name || 'the selected area'} with ${markerCountText} at zoom level ${style.zoom}</desc>`
     );
 
     // Add interactive styles
     svgParts.push('<style>');
     svgParts.push('  .marker { cursor: pointer; outline: none; transition: filter 0.2s; }');
-    svgParts.push('  .marker:hover { filter: brightness(1.1); }');
+    svgParts.push(
+      '  .marker:hover, .marker:focus-visible { filter: brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }'
+    );
     svgParts.push('  .marker:focus-visible { outline: 3px solid #4a90e2; outline-offset: 2px; }');
     svgParts.push('</style>');
 
