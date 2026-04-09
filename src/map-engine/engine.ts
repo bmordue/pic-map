@@ -698,7 +698,8 @@ export class MapEngine {
     const y = height - 30;
 
     const parts: string[] = [];
-    parts.push(`<g class="scale" aria-hidden="true">`);
+    parts.push(`<g class="scale" role="img" aria-label="Map scale: ${this.escapeXml(scaleText)}">`);
+    parts.push(`<title>Map scale: ${this.escapeXml(scaleText)}</title>`);
 
     // Scale bar background
     parts.push(

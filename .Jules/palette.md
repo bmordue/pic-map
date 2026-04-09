@@ -25,3 +25,7 @@
 ## 2025-06-21 - [Prioritize Descriptive Labels over Technical Data]
 **Learning:** For geographic components like maps, raw coordinates in an `aria-label` provide very little value to most users. Using a human-readable location name (like "Map of London") as the primary label significantly improves the immediate understanding of the component's purpose.
 **Action:** In `MapEngine` and similar components, prioritize high-level descriptive fields (like location names or titles) for `aria-label`s, falling back to technical data (like coordinates) only when necessary.
+
+## 2025-04-09 - [Accessible Map Scale and Harmonized Interactive Feedback]
+**Learning:** Map scales, often overlooked, should be accessible graphics rather than hidden decorative elements. Using `role="img"` and `aria-label` provides screen reader users with essential map context. Additionally, consistent interactive feedback across different engine modules (e.g., matching hover/focus shadows) creates a more unified and professional user experience.
+**Action:** Always ensure informational graphics like scale bars have appropriate ARIA roles and labels. Maintain visual parity for interactive states across the entire application to ensure a cohesive UX.

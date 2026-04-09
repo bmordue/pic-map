@@ -185,7 +185,9 @@ export class PictureBorderEngine {
     // Add interactive styles
     parts.push('<style>');
     parts.push('  .picture { cursor: pointer; outline: none; transition: filter 0.2s; }');
-    parts.push('  .picture:hover { filter: brightness(1.1); }');
+    parts.push(
+      '  .picture:hover, .picture:focus-visible { filter: brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }'
+    );
     parts.push('  .picture:focus-visible { outline: 3px solid #4a90e2; outline-offset: 2px; }');
     parts.push('</style>');
 
