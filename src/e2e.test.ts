@@ -221,7 +221,7 @@ describe('End-to-End Integration Tests', () => {
       expect(result.svg).toContain('class="map-area"');
       expect(result.svg).toContain('class="pictures"');
       expect(result.svg).toContain('class="link-lines"');
-      expect(result.svg).toContain('class="link-labels"');
+      // Labels are now integrated into picture groups
 
       // Verify markers are rendered
       expect(result.svg).toContain('class="marker"');

@@ -127,7 +127,7 @@ describe('Full Rendering Integration', () => {
     expect(result.svg).toContain('class="map-area"');
     expect(result.svg).toContain('class="pictures"');
     expect(result.svg).toContain('class="link-lines"');
-    expect(result.svg).toContain('class="link-labels"');
+    // Labels are now integrated into picture groups
 
     // Verify labels
     expect(result.svg).toContain('>A<');
@@ -282,7 +282,9 @@ describe('Full Rendering Integration', () => {
     };
     const labelResult = renderFromConfig(labelConfig);
     expect(labelResult.svg).not.toContain('class="link-lines"');
-    expect(labelResult.svg).toContain('class="link-labels"');
+    // Labels are now integrated into picture groups, not a separate layer
+    expect(labelResult.svg).not.toContain('class="link-labels"');
+    expect(labelResult.svg).toContain('>X<');
   });
 
   it('should handle many images', () => {

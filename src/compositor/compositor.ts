@@ -200,13 +200,8 @@ export class Compositor {
       svgParts.push(this.renderLinkLines(layout.links));
     }
 
-    // Render pictures
+    // Render pictures (labels are now integrated)
     svgParts.push(this.renderPictures(layout.pictures));
-
-    // Render link labels
-    if (this.linkStyle.type === 'label' || this.linkStyle.type === 'both') {
-      svgParts.push(this.renderLinkLabels(layout.pictures));
-    }
 
     // Close SVG
     svgParts.push('</svg>');
@@ -414,6 +409,8 @@ export class Compositor {
     const bgColor = sanitizeColor(this.pictureStyle.backgroundColor, '#ffffff');
     const borderThickness = this.pictureStyle.borderThickness ?? 2;
     const cornerRadius = this.pictureStyle.cornerRadius ?? 0;
+    const labelStyle = this.linkStyle.labelStyle!;
+    const showLabels = this.linkStyle.type === 'label' || this.linkStyle.type === 'both';
 
     parts.push('<g class="pictures">');
 
@@ -451,6 +448,26 @@ export class Compositor {
       const innerHeight = Math.max(0, rect.height - 2 * innerPadding);
 
       parts.push(this.renderImagePlaceholder(innerX, innerY, innerWidth, innerHeight, picture));
+
+      // Add label badge if present and enabled in config
+      if (showLabels && label) {
+        const fontSize = labelStyle.fontSize ?? 12;
+        const labelSize = fontSize * 1.6;
+        const labelX = rect.x + 5;
+        const labelY = rect.y + 5;
+        const labelColor = sanitizeColor(labelStyle.color, '#ffffff');
+
+        parts.push('  <g aria-hidden="true">');
+        parts.push(
+          `    <circle cx="${labelX + labelSize / 2}" cy="${labelY + labelSize / 2}" r="${labelSize / 2}" fill="${borderColor}"/>`
+        );
+        parts.push(
+          `    <text x="${labelX + labelSize / 2}" y="${labelY + labelSize / 2 + (fontSize * 0.35)}" ` +
+            `text-anchor="middle" font-family="${escapeXml(labelStyle.fontFamily ?? 'Arial, sans-serif')}" ` +
+            `font-size="${fontSize}" font-weight="bold" fill="${labelColor}">${escapeXml(label)}</text>`
+        );
+        parts.push('  </g>');
+      }
 
       parts.push('</g>');
     }
@@ -580,42 +597,6 @@ export class Compositor {
   /**
    * Renders labels on the pictures
    */
-  private renderLinkLabels(pictures: PositionedPicture[]): string {
-    const parts: string[] = [];
-    const labelStyle = this.linkStyle.labelStyle ?? DEFAULT_LINK_STYLE.labelStyle;
-    const fontFamily = labelStyle?.fontFamily ?? 'Arial, sans-serif';
-    const fontSize = labelStyle?.fontSize ?? 12;
-    const color = sanitizeColor(labelStyle?.color, '#333333');
-
-    parts.push('<g class="link-labels" aria-hidden="true">');
-
-    for (const picture of pictures) {
-      if (!picture.label) continue;
-
-      const { rect } = picture;
-      const labelX = rect.x + rect.width / 2;
-      const labelY = rect.y + rect.height / 2;
-
-      // Label background circle
-      const circleRadius = fontSize * 0.8;
-      parts.push(
-        `<circle cx="${labelX}" cy="${labelY}" r="${circleRadius}" ` +
-          `fill="white" stroke="${color}" stroke-width="1"/>`
-      );
-
-      // Label text
-      parts.push(
-        `<text x="${labelX}" y="${labelY}" ` +
-          `text-anchor="middle" dominant-baseline="central" ` +
-          `font-family="${escapeXml(fontFamily)}" font-size="${fontSize}" ` +
-          `font-weight="bold" fill="${color}">${escapeXml(picture.label)}</text>`
-      );
-    }
-
-    parts.push('</g>');
-
-    return parts.join('\n');
-  }
 
   /**
    * Gets the current configuration

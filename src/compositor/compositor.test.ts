@@ -127,7 +127,8 @@ describe('Compositor', () => {
       const compositor = new Compositor(configWithLabels);
       const result = compositor.render(defaultInput);
 
-      expect(result.svg).toContain('class="link-labels"');
+      // Labels are now integrated into picture groups, not a separate layer
+      expect(result.svg).not.toContain('class="link-labels"');
       expect(result.svg).toContain('>A<');
     });
 
