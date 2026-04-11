@@ -127,7 +127,7 @@ describe('Full Rendering Integration', () => {
     expect(result.svg).toContain('class="map-area"');
     expect(result.svg).toContain('class="pictures"');
     expect(result.svg).toContain('class="link-lines"');
-    expect(result.svg).toContain('class="link-labels"');
+    expect(result.svg).toContain('class="picture-label"');
 
     // Verify labels
     expect(result.svg).toContain('>A<');
@@ -238,7 +238,7 @@ describe('Full Rendering Integration', () => {
 
     expect(result.svg).toContain('<svg');
     expect(result.svg).not.toContain('class="link-lines"');
-    expect(result.svg).not.toContain('class="link-labels"');
+      expect(result.svg).not.toContain('class="picture-label"');
   });
 
   it('should render with different link styles', () => {
@@ -273,7 +273,7 @@ describe('Full Rendering Integration', () => {
     };
     const lineResult = renderFromConfig(lineConfig);
     expect(lineResult.svg).toContain('class="link-lines"');
-    expect(lineResult.svg).not.toContain('class="link-labels"');
+    expect(lineResult.svg).not.toContain('class="picture-label"');
 
     // Test label only
     const labelConfig = {
@@ -282,7 +282,7 @@ describe('Full Rendering Integration', () => {
     };
     const labelResult = renderFromConfig(labelConfig);
     expect(labelResult.svg).not.toContain('class="link-lines"');
-    expect(labelResult.svg).toContain('class="link-labels"');
+    expect(labelResult.svg).toContain('class="picture-label"');
   });
 
   it('should handle many images', () => {
