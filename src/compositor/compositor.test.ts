@@ -127,7 +127,7 @@ describe('Compositor', () => {
       const compositor = new Compositor(configWithLabels);
       const result = compositor.render(defaultInput);
 
-      expect(result.svg).toContain('class="link-labels"');
+      expect(result.svg).toContain('class="picture-label"');
       expect(result.svg).toContain('>A<');
     });
 
@@ -141,7 +141,7 @@ describe('Compositor', () => {
       const result = compositor.render(defaultInput);
 
       expect(result.svg).not.toContain('class="link-lines"');
-      expect(result.svg).not.toContain('class="link-labels"');
+      expect(result.svg).not.toContain('class="picture-label"');
     });
 
     it('should apply custom picture border styling', () => {

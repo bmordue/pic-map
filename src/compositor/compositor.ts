@@ -203,11 +203,6 @@ export class Compositor {
     // Render pictures
     svgParts.push(this.renderPictures(layout.pictures));
 
-    // Render link labels
-    if (this.linkStyle.type === 'label' || this.linkStyle.type === 'both') {
-      svgParts.push(this.renderLinkLabels(layout.pictures));
-    }
-
     // Close SVG
     svgParts.push('</svg>');
 
@@ -452,8 +447,49 @@ export class Compositor {
 
       parts.push(this.renderImagePlaceholder(innerX, innerY, innerWidth, innerHeight, picture));
 
+      // Render label badge if needed
+      if (picture.label && (this.linkStyle.type === 'label' || this.linkStyle.type === 'both')) {
+        parts.push(this.renderPictureLabel(picture));
+      }
+
       parts.push('</g>');
     }
+
+    parts.push('</g>');
+
+    return parts.join('\n');
+  }
+
+  /**
+   * Renders a label badge on a picture
+   */
+  private renderPictureLabel(picture: PositionedPicture): string {
+    const parts: string[] = [];
+    const { rect } = picture;
+    const labelStyle = this.linkStyle.labelStyle ?? DEFAULT_LINK_STYLE.labelStyle;
+    const fontFamily = labelStyle?.fontFamily ?? 'Arial, sans-serif';
+    const fontSize = labelStyle?.fontSize ?? 12;
+    const borderColor = sanitizeColor(this.pictureStyle.borderColor, '#333333');
+
+    const badgeSize = fontSize * 1.6;
+    const badgeX = rect.x + 5;
+    const badgeY = rect.y + 5;
+
+    parts.push('<g class="picture-label" aria-hidden="true">');
+
+    // Label background circle
+    parts.push(
+      `<circle cx="${badgeX + badgeSize / 2}" cy="${badgeY + badgeSize / 2}" r="${badgeSize / 2}" ` +
+        `fill="${borderColor}"/>`
+    );
+
+    // Label text
+    parts.push(
+      `<text x="${badgeX + badgeSize / 2}" y="${badgeY + badgeSize / 2}" ` +
+        `text-anchor="middle" dominant-baseline="central" ` +
+        `font-family="${escapeXml(fontFamily)}" font-size="${fontSize}" ` +
+        `font-weight="bold" fill="white">${escapeXml(picture.label!)}</text>`
+    );
 
     parts.push('</g>');
 
@@ -569,46 +605,6 @@ export class Compositor {
       );
       parts.push(
         `<text x="${captionX}" y="${captionY}" font-family="Arial, sans-serif" font-size="9" fill="white">${escapeXml(picture.image.caption.substring(0, 30))}</text>`
-      );
-    }
-
-    parts.push('</g>');
-
-    return parts.join('\n');
-  }
-
-  /**
-   * Renders labels on the pictures
-   */
-  private renderLinkLabels(pictures: PositionedPicture[]): string {
-    const parts: string[] = [];
-    const labelStyle = this.linkStyle.labelStyle ?? DEFAULT_LINK_STYLE.labelStyle;
-    const fontFamily = labelStyle?.fontFamily ?? 'Arial, sans-serif';
-    const fontSize = labelStyle?.fontSize ?? 12;
-    const color = sanitizeColor(labelStyle?.color, '#333333');
-
-    parts.push('<g class="link-labels" aria-hidden="true">');
-
-    for (const picture of pictures) {
-      if (!picture.label) continue;
-
-      const { rect } = picture;
-      const labelX = rect.x + rect.width / 2;
-      const labelY = rect.y + rect.height / 2;
-
-      // Label background circle
-      const circleRadius = fontSize * 0.8;
-      parts.push(
-        `<circle cx="${labelX}" cy="${labelY}" r="${circleRadius}" ` +
-          `fill="white" stroke="${color}" stroke-width="1"/>`
-      );
-
-      // Label text
-      parts.push(
-        `<text x="${labelX}" y="${labelY}" ` +
-          `text-anchor="middle" dominant-baseline="central" ` +
-          `font-family="${escapeXml(fontFamily)}" font-size="${fontSize}" ` +
-          `font-weight="bold" fill="${color}">${escapeXml(picture.label)}</text>`
       );
     }
 
