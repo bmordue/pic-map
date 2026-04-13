@@ -358,8 +358,8 @@ export class PictureBorderEngine {
 
     // Label text
     parts.push(
-      `<text x="${labelX + labelSize / 2}" y="${labelY + labelSize / 2 + 5}" ` +
-        `text-anchor="middle" font-family="Arial, sans-serif" font-size="14" ` +
+      `<text x="${labelX + labelSize / 2}" y="${labelY + labelSize / 2}" ` +
+        `text-anchor="middle" dominant-baseline="central" font-family="Arial, sans-serif" font-size="14" ` +
         `font-weight="bold" fill="white">${this.escapeXml(pic.label!)}</text>`
     );
 

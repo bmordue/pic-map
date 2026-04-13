@@ -29,3 +29,7 @@
 ## 2025-04-09 - [Accessible Map Scale and Harmonized Interactive Feedback]
 **Learning:** Map scales, often overlooked, should be accessible graphics rather than hidden decorative elements. Using `role="img"` and `aria-label` provides screen reader users with essential map context. Additionally, consistent interactive feedback across different engine modules (e.g., matching hover/focus shadows) creates a more unified and professional user experience.
 **Action:** Always ensure informational graphics like scale bars have appropriate ARIA roles and labels. Maintain visual parity for interactive states across the entire application to ensure a cohesive UX.
+
+## 2025-06-25 - [Integrated SVG Labels as Badges]
+**Learning:** Integrating labels directly into the interactive component's group (e.g., '.picture') as a badge is better for UX than a separate global label group. It ensures the label doesn't obscure the center of the image, maintains logical grouping for accessibility, and provides consistent hover/focus feedback.
+**Action:** Use badges for labeling interactive SVG elements, positioned in a corner (like top-left), and integrate them into the primary container group.
