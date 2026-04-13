@@ -439,8 +439,18 @@ export class MapEngine {
     // Add a small lake/pond
     const lakeX = width * 0.7;
     const lakeY = height * 0.2;
+    const lakeRx = 35;
+    const lakeRy = 20;
     svgParts.push(
-      `<ellipse cx="${lakeX}" cy="${lakeY}" rx="35" ry="20" fill="#a8d5e5" stroke="#8bc4d8"/>`
+      `<ellipse cx="${lakeX}" cy="${lakeY}" rx="${lakeRx}" ry="${lakeRy}" fill="#a8d5e5" stroke="#8bc4d8"/>`
+    );
+
+    // Add subtle wave lines to the lake
+    svgParts.push(
+      `<path d="M ${lakeX - 15},${lakeY - 5} q 5,-3 10,0 t 10,0" fill="none" stroke="#8bc4d8" stroke-width="1" opacity="0.6"/>`
+    );
+    svgParts.push(
+      `<path d="M ${lakeX - 10},${lakeY + 5} q 5,-3 10,0 t 10,0" fill="none" stroke="#8bc4d8" stroke-width="1" opacity="0.6"/>`
     );
   }
 
@@ -719,7 +729,7 @@ export class MapEngine {
 
     // Scale text
     parts.push(
-      `<text x="${x + scaleWidthPixels / 2}" y="${y + 5}" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#333">${this.escapeXml(scaleText)}</text>`
+      `<text x="${x + scaleWidthPixels / 2}" y="${y + 10}" text-anchor="middle" dominant-baseline="central" font-family="Arial, sans-serif" font-size="12" fill="#333">${this.escapeXml(scaleText)}</text>`
     );
 
     parts.push('</g>');
@@ -739,7 +749,22 @@ export class MapEngine {
     const x = width - 10;
     const y = height - 10;
 
-    return `<text x="${x}" y="${y}" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#666" aria-hidden="true">${this.escapeXml(attributionText)}</text>`;
+    const parts: string[] = [];
+    parts.push('<g class="attribution">');
+    parts.push(`<title>${this.escapeXml(attributionText)}</title>`);
+
+    // Add a semi-transparent background for better readability
+    const textWidth = attributionText.length * 6; // Rough estimate
+    parts.push(
+      `<rect x="${x - textWidth - 5}" y="${y - 12}" width="${textWidth + 10}" height="16" fill="white" fill-opacity="0.6" rx="3" ry="3" aria-hidden="true"/>`
+    );
+
+    parts.push(
+      `<text x="${x}" y="${y}" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#666" aria-hidden="true">${this.escapeXml(attributionText)}</text>`
+    );
+    parts.push('</g>');
+
+    return parts.join('\n');
   }
 
   /**

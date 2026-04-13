@@ -101,8 +101,8 @@ describe('LinkManager Integration', () => {
 
       // Verify links were rendered
       expect(linkResult.svg).toContain('<g class="links">');
-      expect(linkResult.svg).toContain('<g class="link-lines">');
-      expect(linkResult.svg).toContain('<g class="link-labels">');
+      expect(linkResult.svg).toContain('<g class="link-lines" aria-hidden="true">');
+      expect(linkResult.svg).toContain('<g class="link-labels" aria-hidden="true">');
       expect(linkResult.linkCount).toBe(3);
     });
 
