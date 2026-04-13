@@ -530,7 +530,7 @@ export class LinkManager {
     warnings: string[]
   ): string {
     const parts: string[] = [];
-    parts.push('<g class="link-lines">');
+    parts.push('<g class="link-lines" aria-hidden="true">');
 
     // Group links by location to handle multiple pictures per marker
     const groups = this.groupLinksByLocation(resolvedLinks);
@@ -629,7 +629,7 @@ export class LinkManager {
     style: ReturnType<LinkManager['normalizeStyle']>
   ): string {
     const parts: string[] = [];
-    parts.push('<g class="link-labels">');
+    parts.push('<g class="link-labels" aria-hidden="true">');
 
     for (const resolved of resolvedLinks) {
       // Label near the picture

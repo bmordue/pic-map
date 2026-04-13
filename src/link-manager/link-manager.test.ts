@@ -268,8 +268,8 @@ describe('LinkManager', () => {
       const result = manager.renderLinks(resolved, defaultLinkRenderConfig);
 
       expect(result.svg).toContain('<g class="links">');
-      expect(result.svg).toContain('<g class="link-lines">');
-      expect(result.svg).toContain('<g class="link-labels">');
+      expect(result.svg).toContain('<g class="link-lines" aria-hidden="true">');
+      expect(result.svg).toContain('<g class="link-labels" aria-hidden="true">');
       expect(result.svg).toContain('<line');
       expect(result.svg).toContain('class="link-label link-label-picture"');
       expect(result.svg).toContain('class="link-label link-label-marker"');
@@ -288,8 +288,8 @@ describe('LinkManager', () => {
 
       const result = manager.renderLinks(resolved, config);
 
-      expect(result.svg).toContain('<g class="link-lines">');
-      expect(result.svg).not.toContain('<g class="link-labels">');
+      expect(result.svg).toContain('<g class="link-lines" aria-hidden="true">');
+      expect(result.svg).not.toContain('<g class="link-labels"');
       expect(result.svg).toContain('<line');
     });
 
@@ -305,8 +305,8 @@ describe('LinkManager', () => {
 
       const result = manager.renderLinks(resolved, config);
 
-      expect(result.svg).not.toContain('<g class="link-lines">');
-      expect(result.svg).toContain('<g class="link-labels">');
+      expect(result.svg).not.toContain('<g class="link-lines"');
+      expect(result.svg).toContain('<g class="link-labels" aria-hidden="true">');
     });
 
     it('should render nothing when style is "none"', () => {

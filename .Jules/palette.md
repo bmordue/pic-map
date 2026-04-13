@@ -33,3 +33,7 @@
 ## 2025-06-25 - [Integrated SVG Labels as Badges]
 **Learning:** Integrating labels directly into the interactive component's group (e.g., '.picture') as a badge is better for UX than a separate global label group. It ensures the label doesn't obscure the center of the image, maintains logical grouping for accessibility, and provides consistent hover/focus feedback.
 **Action:** Use badges for labeling interactive SVG elements, positioned in a corner (like top-left), and integrate them into the primary container group.
+
+## 2025-07-10 - [SVG Legibility and Vertical Alignment]
+**Learning:** Text elements in complex SVGs, like map attributions, can easily become illegible when overlapping diverse background features. A semi-transparent background rectangle provides a robust solution for readability without completely obscuring underlying details. Additionally, using `dominant-baseline="central"` is a more reliable way to achieve perfect vertical centering for labels and scale text than manual pixel offsets, as it adapts better to different font sizes.
+**Action:** Always provide high-contrast backgrounds for informational text in SVGs and use semantic alignment attributes like `dominant-baseline` for cleaner, more maintainable positioning.
