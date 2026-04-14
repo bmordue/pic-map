@@ -73,7 +73,22 @@ describe('MapEngine Accessibility', () => {
     expect(result.svg).toContain('<title>Big Ben (marker A)</title>');
     expect(result.svg).toContain('tabindex="0"');
     expect(result.svg).toContain('aria-hidden="true"'); // For decorative features and scale
-    expect(result.svg).toContain('aria-hidden="true">© OpenStreetMap contributors</text>');
+  });
+
+  it('should include accessible attribution', () => {
+    const engine = new MapEngine();
+    const result = engine.renderMap({
+      style: defaultMapStyle,
+      width: 800,
+      height: 600,
+    });
+
+    expect(result.svg).toContain('class="attribution"');
+    expect(result.svg).toContain('role="img"');
+    expect(result.svg).toContain('aria-label="Map attribution: © OpenStreetMap contributors"');
+    expect(result.svg).toContain('<title>© OpenStreetMap contributors</title>');
+    // Verify it's no longer hidden
+    expect(result.svg).not.toContain('aria-hidden="true">© OpenStreetMap contributors</text>');
   });
 
   it('should include interactive styles in the SVG', () => {

@@ -37,3 +37,7 @@
 ## 2025-07-10 - [SVG Legibility and Vertical Alignment]
 **Learning:** Text elements in complex SVGs, like map attributions, can easily become illegible when overlapping diverse background features. A semi-transparent background rectangle provides a robust solution for readability without completely obscuring underlying details. Additionally, using `dominant-baseline="central"` is a more reliable way to achieve perfect vertical centering for labels and scale text than manual pixel offsets, as it adapts better to different font sizes.
 **Action:** Always provide high-contrast backgrounds for informational text in SVGs and use semantic alignment attributes like `dominant-baseline` for cleaner, more maintainable positioning.
+
+## 2025-07-20 - [Accessible SVG Attribution]
+**Learning:** Map attribution text, often tucked away in a corner, is frequently skipped by screen readers or rendered with poor contrast. Providing a semantic `role="img"` and a descriptive `aria-label` to the attribution group makes it an first-class citizen in the accessibility tree, while increasing background opacity ensures it remains readable against complex map features.
+**Action:** Ensure all informational groups in complex SVGs have appropriate ARIA roles and labels, and prioritize visual contrast for small text elements.
