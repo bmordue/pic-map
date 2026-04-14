@@ -750,17 +750,19 @@ export class MapEngine {
     const y = height - 10;
 
     const parts: string[] = [];
-    parts.push('<g class="attribution">');
+    parts.push(
+      `<g class="attribution" role="img" aria-label="Map attribution: ${this.escapeXml(attributionText)}">`
+    );
     parts.push(`<title>${this.escapeXml(attributionText)}</title>`);
 
     // Add a semi-transparent background for better readability
     const textWidth = attributionText.length * 6; // Rough estimate
     parts.push(
-      `<rect x="${x - textWidth - 5}" y="${y - 12}" width="${textWidth + 10}" height="16" fill="white" fill-opacity="0.6" rx="3" ry="3" aria-hidden="true"/>`
+      `<rect x="${x - textWidth - 5}" y="${y - 8}" width="${textWidth + 10}" height="16" fill="white" fill-opacity="0.8" rx="3" ry="3" aria-hidden="true"/>`
     );
 
     parts.push(
-      `<text x="${x}" y="${y}" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#666" aria-hidden="true">${this.escapeXml(attributionText)}</text>`
+      `<text x="${x}" y="${y}" text-anchor="end" dominant-baseline="central" font-family="Arial, sans-serif" font-size="10" fill="#444">${this.escapeXml(attributionText)}</text>`
     );
     parts.push('</g>');
 
