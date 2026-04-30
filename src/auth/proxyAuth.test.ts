@@ -7,21 +7,27 @@ import type { Request, Response, NextFunction } from 'express';
 // Helpers
 // ---------------------------------------------------------------------------
 
-function makeRes(): Response {
+function makeRes(): Response & { _status: number; _body: unknown } {
+  const state = { _status: 200, _body: undefined as unknown };
   const locals: Record<string, unknown> = {};
-  return {
+  const res = {
     locals,
     status(code: number) {
-      this._status = code;
-      return this;
+      state._status = code;
+      return res;
     },
     json(body: unknown) {
-      this._body = body;
-      return this;
+      state._body = body;
+      return res;
     },
-    _status: 200,
-    _body: undefined,
-  } as unknown as Response;
+    get _status() {
+      return state._status;
+    },
+    get _body() {
+      return state._body;
+    },
+  };
+  return res as unknown as Response & { _status: number; _body: unknown };
 }
 
 function makeReq(headers: Record<string, string> = {}): Request {
@@ -216,7 +222,7 @@ describe('requireAuth', () => {
     requireAuth(req, res, next);
 
     expect(next).toHaveBeenCalledOnce();
-    expect((res as unknown as { _status: number })._status).toBe(200);
+    expect(res._status).toBe(200);
   });
 
   it('returns 401 for guest user', () => {
@@ -234,7 +240,7 @@ describe('requireAuth', () => {
     requireAuth(req, res, next);
 
     expect(next).not.toHaveBeenCalled();
-    expect((res as unknown as { _status: number })._status).toBe(401);
+    expect(res._status).toBe(401);
   });
 
   it('returns 401 when user is not set in res.locals', () => {
@@ -245,7 +251,7 @@ describe('requireAuth', () => {
     requireAuth(req, res, next);
 
     expect(next).not.toHaveBeenCalled();
-    expect((res as unknown as { _status: number })._status).toBe(401);
+    expect(res._status).toBe(401);
   });
 });
 
@@ -274,7 +280,7 @@ describe('requireProxyAuth', () => {
     requireProxyAuth(req, res, next);
 
     expect(next).toHaveBeenCalledOnce();
-    expect((res as unknown as { _status: number })._status).toBe(200);
+    expect(res._status).toBe(200);
   });
 
   it('returns 401 in production mode when Remote-User is absent', () => {
@@ -286,7 +292,7 @@ describe('requireProxyAuth', () => {
     requireProxyAuth(req, res, next);
 
     expect(next).not.toHaveBeenCalled();
-    expect((res as unknown as { _status: number })._status).toBe(401);
+    expect(res._status).toBe(401);
   });
 
   it('passes through in production mode when Remote-User is present', () => {
@@ -309,7 +315,7 @@ describe('requireProxyAuth', () => {
     requireProxyAuth(req, res, next);
 
     expect(next).not.toHaveBeenCalled();
-    expect((res as unknown as { _status: number })._status).toBe(401);
+    expect(res._status).toBe(401);
   });
 
   it('passes through when REQUIRE_PROXY_AUTH=true and Remote-User is present', () => {
