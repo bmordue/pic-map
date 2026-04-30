@@ -47,6 +47,7 @@ The project targets print-ready output formats:
 - [Getting Started](#getting-started)
 - [Quick Start](#quick-start)
 - [Architecture](#architecture)
+- [Authentication Model](#authentication-model)
 - [Configuration](#configuration)
 - [API Reference](#api-reference)
 - [Examples](#examples)
@@ -135,6 +136,19 @@ Pic-Map is built with a modular architecture consisting of five main components:
 | **Link Manager** | Connects pictures to map markers with visual indicators |
 | **Compositor** | Combines all elements into the final composition |
 | **Export Engine** | Converts compositions to print-ready SVG and PDF |
+
+## Authentication Model
+
+Any HTTP server added to pic-map (e.g. a future preview server or web editor)
+uses a **reverse-proxy forward-auth** pattern: authentication is handled
+entirely by an upstream nginx + Authelia (or oauth2-proxy) stack.
+The application trusts identity headers (`Remote-User`, `Remote-Name`,
+`Remote-Email`, `Remote-Groups`) injected by the proxy and never reads
+credentials, sessions, or bearer tokens directly.
+
+The auth middleware is implemented in `src/auth/proxyAuth.ts`.
+See [docs/auth.md](docs/auth.md) for the full deployment topology,
+nginx configuration, environment variables, and threat model.
 
 ## Configuration
 
