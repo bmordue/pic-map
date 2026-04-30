@@ -100,6 +100,22 @@ describe('resolveUserFromHeaders', () => {
     expect(user.groups).toEqual(['admins', 'editors', 'viewers']);
   });
 
+  it('accepts Remote-User as a string array (takes first element)', () => {
+    const user = resolveUserFromHeaders({
+      'remote-user': ['Alice@Example.com', 'other@example.com'],
+    });
+    expect(user.email).toBe('alice@example.com');
+    expect(user.isGuest).toBe(false);
+  });
+
+  it('accepts Remote-Groups as a string array (takes first element)', () => {
+    const user = resolveUserFromHeaders({
+      'remote-user': 'alice@example.com',
+      'remote-groups': ['admins,editors', 'ignored'],
+    });
+    expect(user.groups).toEqual(['admins', 'editors']);
+  });
+
   // DEV_STUB_USER
   describe('DEV_STUB_USER', () => {
     it('uses DEV_STUB_USER when no proxy headers are present (dev mode)', () => {
@@ -117,6 +133,14 @@ describe('resolveUserFromHeaders', () => {
       expect(user.email).toBe('dev@example.com');
       expect(user.name).toBe('Developer');
       expect(user.groups).toEqual([]);
+    });
+
+    it('lowercases the email from DEV_STUB_USER', () => {
+      process.env['DEV_STUB_USER'] = 'Dev@Example.COM:Developer:admins';
+      const user = resolveUserFromHeaders({});
+      expect(user.email).toBe('dev@example.com');
+      expect(user.id).toBe('dev@example.com');
+      expect(user.isGuest).toBe(false);
     });
 
     it('ignores DEV_STUB_USER when NODE_ENV=production', () => {
@@ -325,6 +349,19 @@ describe('requireProxyAuth', () => {
     const next = vi.fn() as NextFunction;
 
     requireProxyAuth(req, res, next);
+
+    expect(next).toHaveBeenCalledOnce();
+  });
+
+  it('passes in production when Remote-User is a string array', () => {
+    process.env['NODE_ENV'] = 'production';
+    const reqWithArray = {
+      headers: { 'remote-user': ['alice@example.com', 'other'] },
+    } as unknown as Request;
+    const res = makeRes();
+    const next = vi.fn() as NextFunction;
+
+    requireProxyAuth(reqWithArray, res, next);
 
     expect(next).toHaveBeenCalledOnce();
   });

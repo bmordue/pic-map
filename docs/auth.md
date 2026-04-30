@@ -176,7 +176,6 @@ after authentication.
 | `NODE_ENV`           | `development` | Set to `production` to disable dev stubs and enable strict binding                                                            |
 | `REQUIRE_PROXY_AUTH` | (unset)       | When `true`, disables `DEV_STUB_USER` and enables strict proxy-auth behaviour for the optional `requireProxyAuth` middleware  |
 | `DEV_STUB_USER`      | (unset)       | Development-only stub identity (ignored in production; see below)                                                             |
-| `ADMIN_GROUP`        | `admins`      | Name of the group whose members have admin privileges                                                                         |
 
 ---
 

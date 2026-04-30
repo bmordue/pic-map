@@ -78,8 +78,9 @@ function parseDevStubUser(): { email: string; name: string; groups: string[] } |
   const firstColon = raw.indexOf(':');
   if (firstColon < 0) return null;
 
-  const email = raw.slice(0, firstColon).trim();
-  if (!email) return null;
+  const emailRaw = raw.slice(0, firstColon).trim();
+  if (!emailRaw) return null;
+  const email = emailRaw.toLowerCase();
 
   const rest = raw.slice(firstColon + 1);
   const secondColon = rest.indexOf(':');
@@ -115,20 +116,22 @@ export function resolveUserFromHeaders(
   headers: Record<string, string | string[] | undefined>,
 ): RuntimeUser {
   const rawEmail = headers[HEADER_REMOTE_USER] ?? headers[HEADER_REMOTE_EMAIL];
-  const email =
-    typeof rawEmail === 'string' ? rawEmail.trim().toLowerCase() : '';
+  const emailStr = Array.isArray(rawEmail) ? rawEmail[0] : rawEmail;
+  const email = typeof emailStr === 'string' ? emailStr.trim().toLowerCase() : '';
 
   if (email !== '') {
     const rawName = headers[HEADER_REMOTE_NAME];
+    const nameStr = Array.isArray(rawName) ? rawName[0] : rawName;
     const name =
-      typeof rawName === 'string' && rawName.trim() !== ''
-        ? rawName.trim()
+      typeof nameStr === 'string' && nameStr.trim() !== ''
+        ? nameStr.trim()
         : email;
 
     const rawGroups = headers[HEADER_REMOTE_GROUPS];
+    const groupsStr = Array.isArray(rawGroups) ? rawGroups[0] : rawGroups;
     const groups: string[] =
-      typeof rawGroups === 'string' && rawGroups.trim() !== ''
-        ? rawGroups
+      typeof groupsStr === 'string' && groupsStr.trim() !== ''
+        ? groupsStr
             .split(',')
             .map(g => g.trim())
             .filter(Boolean)
@@ -196,7 +199,14 @@ export function requireProxyAuth(req: Request, res: Response, next: NextFunction
   }
 
   const remoteUser = req.headers[HEADER_REMOTE_USER];
-  if (typeof remoteUser !== 'string' || remoteUser.trim() === '') {
+  const remoteUserStr =
+    typeof remoteUser === 'string'
+      ? remoteUser
+      : Array.isArray(remoteUser) && remoteUser.length > 0
+        ? remoteUser[0]
+        : '';
+
+  if (remoteUserStr.trim() === '') {
     res.status(401).json({ error: 'Missing proxy authentication headers' });
     return;
   }
