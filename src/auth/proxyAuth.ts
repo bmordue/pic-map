@@ -59,10 +59,7 @@ const HEADER_REMOTE_GROUPS = 'remote-groups';
 
 /** Returns true when running in production proxy-auth mode. */
 function proxyAuthRequired(): boolean {
-  return (
-    process.env['NODE_ENV'] === 'production' ||
-    process.env['REQUIRE_PROXY_AUTH'] === 'true'
-  );
+  return process.env['NODE_ENV'] === 'production' || process.env['REQUIRE_PROXY_AUTH'] === 'true';
 }
 
 /**
@@ -99,7 +96,7 @@ function parseDevStubUser(): { email: string; name: string; groups: string[] } |
   const groups = groupsStr
     ? groupsStr
         .split(',')
-        .map(g => g.trim())
+        .map((g) => g.trim())
         .filter(Boolean)
     : [];
 
@@ -113,7 +110,7 @@ function parseDevStubUser(): { email: string; name: string; groups: string[] } |
  * @returns The resolved RuntimeUser (never throws).
  */
 export function resolveUserFromHeaders(
-  headers: Record<string, string | string[] | undefined>,
+  headers: Record<string, string | string[] | undefined>
 ): RuntimeUser {
   const rawEmail = headers[HEADER_REMOTE_USER] ?? headers[HEADER_REMOTE_EMAIL];
   const emailStr = Array.isArray(rawEmail) ? rawEmail[0] : rawEmail;
@@ -122,10 +119,7 @@ export function resolveUserFromHeaders(
   if (email !== '') {
     const rawName = headers[HEADER_REMOTE_NAME];
     const nameStr = Array.isArray(rawName) ? rawName[0] : rawName;
-    const name =
-      typeof nameStr === 'string' && nameStr.trim() !== ''
-        ? nameStr.trim()
-        : email;
+    const name = typeof nameStr === 'string' && nameStr.trim() !== '' ? nameStr.trim() : email;
 
     const rawGroups = headers[HEADER_REMOTE_GROUPS];
     const groupsStr = Array.isArray(rawGroups) ? rawGroups[0] : rawGroups;
@@ -133,7 +127,7 @@ export function resolveUserFromHeaders(
       typeof groupsStr === 'string' && groupsStr.trim() !== ''
         ? groupsStr
             .split(',')
-            .map(g => g.trim())
+            .map((g) => g.trim())
             .filter(Boolean)
         : [];
 
