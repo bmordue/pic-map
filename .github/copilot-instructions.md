@@ -52,6 +52,17 @@ The project is currently in early development. When adding new files:
 - Keep dependencies minimal and purposeful
 - Consider the print output requirements when selecting libraries
 
+## Authentication Contract
+
+Any HTTP server added to this project (e.g. a preview server, web editor, or upload endpoint)
+**must** use `loadUser` and `requireAuth` from `src/auth/proxyAuth.ts`.
+
+- Never read credentials, sessions, or bearer tokens directly inside application code.
+- Authentication is delegated to an upstream nginx + Authelia (or oauth2-proxy) reverse proxy.
+- Identity is resolved from the `Remote-User`, `Remote-Name`, `Remote-Email`, and `Remote-Groups`
+  headers injected by the proxy.
+- See `docs/auth.md` for the full deployment topology and configuration details.
+
 ## When Working on Issues
 
 - Focus on the print-ready output requirement
